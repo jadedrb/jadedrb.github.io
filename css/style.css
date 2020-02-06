@@ -1,0 +1,23 @@
+body {
+  background: black;
+  color: blue;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+#area {
+  border: 1px solid white;
+  display: grid;
+  grid-template-rows: repeat(100, 5px);
+  grid-template-columns: repeat(100, 5px);
+}
+#container {
+  width: 500px;
+  height: 500px;
+}
+.boxes {
+  border: 1px solid blue;
+}
+#area div {
+  border: 1px solid blue;
+}
