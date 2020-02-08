@@ -8,9 +8,43 @@
   <body>
     <div id="container">
       <div id="area">
+        <div class="red-pixel"></div>
+        <div class="blue-pixel"></div>
 
+        <div id="menu">
+          <label for="player-count" class="menu-stuff">Number of Players</label>
+          <select class="menu-stuff" id="player-count">
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+            <option value="4">Four</option>
+          </select>
+          <label for="first-to" class="menu-stuff">Game Length</label>
+          <select class="menu-stuff" id="first-to">
+            <option value="3">First to 3</option>
+            <option value="5">First to 5</option>
+            <option value="10">First to 10</option>
+          </select>
+          <label for="arena-size" class="menu-stuff">Arena Size: </label>
+          <select class="menu-stuff" id="arena-size">
+            <option value="large">Large</option>
+            <option value="medium">Medium</option>
+            <option value="small">Small</option>
+          </select>
+          <label for="game-speed" class="menu-stuff">Game Speed: </label>
+          <select class="menu-stuff" id="game-speed">
+            <option value="40">Normal</option>
+            <option value="100">Slow</option>
+            <option value="10">Fast</option>
+          </select>
+          <button class="menu-stuff" onclick="setAndStart()">GO!</button>
+        </div>
+        <div id="winner-anim"></div>
       </div>
     </div>
+    <button onclick="movePlayers('grid')">Grid</button>
+    <button onclick="movePlayers('pixel')">Pixel</button>
+
     <!-- <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas> -->
     <script src="js/app.js"></script>
   </body>
