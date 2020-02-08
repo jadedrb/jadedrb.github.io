@@ -53,10 +53,11 @@ const setDirection = (method) => {
 
 // red player / player one object
 class Player {
-  constructor(box, color) {
+  constructor(box, color, name) {
     this.boxNum = box;
     this.boxArr = [];
     this.boxColor = color;
+    this.name = name;
     this.boxDirec = undefined;
     this.points = 0;
     this.wins = 0;
@@ -68,17 +69,18 @@ class Player {
   }
 }
 
-let redPlayer;
-let bluePlayer;
-let greenPlayer;
-let orangePlayer;
-let playerArr;
+let redPlayer = new Player(200, 'red', 'Red')
+let bluePlayer = new Player(340, 'blue', 'Blue')
+let greenPlayer = new Player(19500, 'green', 'Green')
+let orangePlayer = new Player(19380, 'orange', 'Green')
+let playerArr = [redPlayer, bluePlayer, greenPlayer, orangePlayer]
 
 let numberOfPlayers;
+let activePlayers;
 let firstTo;
 let lastRoundWinner;
 let gameSpeed;
-let rounds = 1;
+let rounds;
 // let redPlayer = {
 //   boxNum: 200,
 //   boxArr: [],
@@ -106,23 +108,45 @@ let rounds = 1;
 //   }
 // }
 
-const setAndStart = () => {
+const setAndStart = (menu) => {
 
-  redPlayer = new Player(200, 'red')
-  bluePlayer = new Player(340, 'blue')
-  greenPlayer = new Player(19500, 'green')
-  orangePlayer = new Player(19380, 'orange')
-  playerArr = [redPlayer, bluePlayer, greenPlayer, orangePlayer]
+  // redPlayer = new Player(200, 'red')
+  // bluePlayer = new Player(340, 'blue')
+  // greenPlayer = new Player(19500, 'green')
+  // orangePlayer = new Player(19380, 'orange')
 
-  gameSpeed = Number(document.getElementById('game-speed').value)
-  let players = document.getElementById('player-count').value
-  let arenaSize = document.getElementById('arena-size').value
-  document.getElementById('menu').style.display = 'none'
-  console.log(players)
-  console.log(arenaSize)
-  firstTo = document.getElementById('first-to').value
-  howManyPlayers(players)
-  movePlayers('grid')
+  if (menu == 0) {
+    rounds = 1;
+    redPlayer.wins = 0
+    bluePlayer.wins = 0
+    greenPlayer.wins = 0
+    orangePlayer.wins = 0
+    gameSpeed = Number(document.getElementById('game-speed').value)
+    let players = document.getElementById('player-count').value
+    let arenaSize = document.getElementById('arena-size').value
+    document.getElementById('menu').style.visibility = 'hidden'
+    document.getElementById('controls').style.visibility = 'visible'
+    console.log(players)
+    console.log(arenaSize)
+    firstTo = document.getElementById('first-to').value
+    activePlayers = players
+    players > 0 ? document.getElementById('red-para').style.visibility = 'visible' : undefined
+    players > 1 ? document.getElementById('blue-para').style.visibility = 'visible' : undefined
+    players > 2 ? document.getElementById('green-para').style.visibility = 'visible' : undefined
+    players > 3 ? document.getElementById('orange-para').style.visibility = 'visible' : undefined
+    howManyPlayers(players)
+  } else {
+    document.getElementById('controls').style.visibility = 'hidden'
+    document.getElementById('red-para').style.visibility = 'hidden'
+    document.getElementById('blue-para').style.visibility = 'hidden'
+    document.getElementById('blue-para').style.visibility = 'hidden'
+    document.getElementById('blue-para').style.visibility = 'hidden'
+    redPlayer.name = document.getElementById('red-name').value
+    bluePlayer.name = document.getElementById('blue-name').value
+    greenPlayer.name = document.getElementById('green-name').value
+    orangePlayer.name = document.getElementById('orange-name').value
+    movePlayers('grid')
+  }
 }
 
 const howManyPlayers = (num) => {
@@ -328,28 +352,32 @@ const checkWinner = () => {
 
       if (player.boxColor == 'red') {
         rgbColor = [255,0,0]
-        words = 'Red Wins!'
+        words = player.name
       } else if (player.boxColor == 'blue') {
         rgbColor = [0,0,255]
-        words = 'Blue Wins!'
+        words = player.name
       } else if (player.boxColor == 'green') {
         rgbColor = [8,205,8]
-        words = 'Green Wins!'
+        words = player.name
       } else {
         rgbColor = [255,170,0]
-        words = 'Orange Wins!'
+        words = player.name
       }
 
-      setTimeout(()=> fadeThis(winnerAnim, words, [255,255,255], rgbColor, nextRound), 2000);
-    }
-    if (player.wins >= firstTo) {
-      /// Win player wins game and you want to reset
+      if (player.wins >= firstTo) {
+        words = 'Game over.<br>' + words + ' VICTORY!'
+        setTimeout(()=> fadeThis(winnerAnim, words, [255,255,255], rgbColor, endGame), 2000);
+        console.log('end?')
+      } else {
+        words += ' Wins!'
+        setTimeout(()=> fadeThis(winnerAnim, words, [255,255,255], rgbColor, nextRound), 2000);
+      }
     }
   }
 }
 
 function fadeThis(element, words, startColor, finishColor, nextFunc, time = 1000) {
-    element.innerText = words;
+    element.innerHTML = words;
     let timer = setInterval(() => {
         if (startColor[0] == finishColor[0] && startColor[1] == finishColor[1] && startColor[2] == finishColor[2]) {
             clearInterval(timer);
@@ -366,17 +394,25 @@ function fadeThis(element, words, startColor, finishColor, nextFunc, time = 1000
 const nextRound = () => {
   let displayRound = document.getElementById('winner-anim')
   removePlayer(lastRoundWinner)
-  displayRound.innerText = ''
+  displayRound.innerHTML = ''
   rounds++
   fadeThis(displayRound, `Round ${rounds}`, [0,0,0], [255,255,255], getReadyToMovePlayers, 5000)
 }
 
 const getReadyToMovePlayers = () => {
   let displayRound = document.getElementById('winner-anim')
-  displayRound.innerText = ''
+  displayRound.innerHTML = ''
   gameStarted = false;
-  howManyPlayers(playerArr.length)
+  howManyPlayers(activePlayers)
   movePlayers('grid')
+}
+
+const endGame = () => {
+  let displayRound = document.getElementById('winner-anim')
+  document.getElementById('menu').style.visibility = 'visible'
+  displayRound.innerHTML = ''
+  removePlayer(lastRoundWinner)
+  gameStarted = false;
 }
 
 

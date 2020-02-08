@@ -37,10 +37,43 @@
             <option value="100">Slow</option>
             <option value="10">Fast</option>
           </select>
-          <button class="menu-stuff" onclick="setAndStart()">GO!</button>
+          <label for="tail-length" class="menu-stuff">Tail: </label>
+          <select class="menu-stuff" id="tail-length">
+            <option value="finite">Finite</option>
+            <option value="infinite">Infinite</option>
+          </select>
+          <button class="menu-stuff" onclick="setAndStart(0)">NEXT</button>
         </div>
+
+        <div id="controls">
+          <div class="player-para" id="red-para">
+            <h3>Player 1: Red</h3>
+            <input class="menu-stuff" id="red-name" type="text" value="Red" placeholder="Red">
+            <p>Controls: W, A, S, D</p> (Up, Left, Down, Right)
+          </div>
+          <div class="player-para" id="blue-para">
+            <h3>Player 2: Blue</h3>
+            <input class="menu-stuff" id="blue-name" type="text" value="Blue" placeholder="Blue">
+            <p>Controls: Arrow keys</p>
+          </div>
+          <div class="player-para" id="green-para">
+            <h3>Player 3: Green</h3>
+            <input class="menu-stuff" id="green-name" type="text" value="Green" placeholder="Green">
+            <p>Controls: Y, G, H, J</p> (Up, Left, Down, Right)
+          </div>
+          <div class="player-para" id="orange-para">
+            <h3>Player 4: Orange</h3>
+            <input class="menu-stuff" id="orange-name" type="text" value="Orange" placeholder="Orange">
+            <p>Controls: P, L, :, "</p> (Up, Left, Down, Right)
+          </div>
+          <button onclick="setAndStart(1)">READY?</button>
+        </div>
+
         <div id="winner-anim"></div>
       </div>
+    </div>
+
+    <div id="stats">
     </div>
     <button onclick="movePlayers('grid')">Grid</button>
     <button onclick="movePlayers('pixel')">Pixel</button>
