@@ -74,7 +74,7 @@ const setDirection = (method) => {
 
 // Blueprint for all four players
 class Player {
-  constructor(box, color, name) {
+  constructor(box, color, name, winDomId) {
     this.boxNum = box;
     this.boxArr = [];
     this.boxColor = color;
@@ -84,6 +84,7 @@ class Player {
     this.kills = 0;
     this.points = 0;
     this.growth = 0;
+    this.element = winDomId;
     this.potential = 10;
     this.wins = 0;
     this.status = undefined;
@@ -95,10 +96,10 @@ class Player {
 }
 
 // Create four players based off class blueprint above
-let redPlayer = new Player(200, 'red', 'Red')
-let bluePlayer = new Player(340, 'blue', 'Blue')
-let greenPlayer = new Player(19500, 'green', 'Green')
-let orangePlayer = new Player(19380, 'orange', 'Green')
+let redPlayer = new Player(200, 'red', 'Red', document.getElementById('r-w'))
+let bluePlayer = new Player(340, 'blue', 'Blue', document.getElementById('b-w'))
+let greenPlayer = new Player(19500, 'green', 'Green', document.getElementById('g-w'))
+let orangePlayer = new Player(19380, 'orange', 'Green', document.getElementById('o-w'))
 let playerArr = [redPlayer, bluePlayer, greenPlayer, orangePlayer]
 
 let numberOfPlayers;
@@ -112,6 +113,7 @@ let death;
 let highScore = 0;
 let tailScore = 0;
 let mapSize;
+let enableSpecials = false;
 
 /// BUG REPORT ///
 // Setting to Infinite changes the start position for some reason
@@ -166,6 +168,7 @@ const setAndStart = (menu) => {
       player.growth = 0
       player.buttons = 0
       player.points = 0
+      player.element.innerText = '0'
       player.potential = 10
     })
 
@@ -176,11 +179,13 @@ const setAndStart = (menu) => {
     document.getElementById('controls').style.visibility = 'visible'
     firstTo = document.getElementById('first-to').value
     gameType = document.getElementById('tail-length').value
+    enableSpecials = (document.getElementById('specials').value === 'true')
     activePlayers = players
     players > 0 ? document.getElementById('red-para').style.visibility = 'visible' : undefined
     players > 1 ? document.getElementById('blue-para').style.visibility = 'visible' : undefined
     players > 2 ? document.getElementById('green-para').style.visibility = 'visible' : undefined
     players > 3 ? document.getElementById('orange-para').style.visibility = 'visible' : undefined
+    showInventory()
     howManyPlayers(players)
   } else if (menu == 1){
     document.getElementById('controls').style.visibility = 'hidden'
@@ -219,9 +224,149 @@ const howManyPlayers = (num) => {
   }
 }
 
+const showInventory = () => {
+  let inv = document.getElementsByClassName('inv')
+  let slot = document.getElementsByClassName('slot')
+  if (activePlayers == 1) {
+    inv[0].style.display = 'flex'
+    inv[1].style.display = 'none'
+    inv[2].style.display = 'none'
+    inv[3].style.display = 'none'
+  } else if (activePlayers == 2) {
+    inv[0].style.display = 'flex'
+    inv[1].style.display = 'flex'
+    inv[2].style.display = 'none'
+    inv[3].style.display = 'none'
+  } else if (activePlayers == 3) {
+    inv[0].style.display = 'flex'
+    inv[1].style.display = 'flex'
+    inv[2].style.display = 'flex'
+    inv[3].style.display = 'none'
+  } else {
+    inv[0].style.display = 'flex'
+    inv[1].style.display = 'flex'
+    inv[2].style.display = 'flex'
+    inv[3].style.display = 'flex'
+  }
+  console.log(enableSpecials)
+  for (let i = 0; i < slot.length; i++) {
+    enableSpecials ? slot[i].style.display = 'flex' : slot[i].style.display = 'none'
+  }
+}
+
+let bombArr = []
+
+// This is an ability. A feature that may or may not be implemented
+const bomb = (el) => {
+  let wallAhead = false; // As soon as a wall is detected, the explosion stops
+  let wallBehind = false; // rendering in that direction
+  let wallAbove = false;
+  let wallBelow = false;
+  let testForWalls;
+  let gridPiece;
+
+  // This for loop handles x axis in both directions
+  for (let i = 1; i < 7; i++) {
+
+    testForWalls = document.getElementById(`box-${el+i}`).style.background
+    gridPiece = document.getElementById(`box-${el+i}`)
+    if (testForWalls != 'white') {
+      gridPiece.style.background = 'yellow'
+      bombArr.push(gridPiece)
+    } else {
+      wallAhead = true;
+      console.log('wall ahead')
+    }
+
+    testForWalls = document.getElementById(`box-${el-i}`).style.background
+    gridPiece = document.getElementById(`box-${el-i}`)
+    if(testForWalls != 'white') {
+      gridPiece.style.background = 'yellow'
+      bombArr.push(gridPiece)
+    } else {
+      wallBehind = true;
+      console.log('wall behind')
+    }
+
+// This nested for loop handles y axis (everything above and below the current x axis value)
+    for (let j = 1; j < 7; j++) {
+
+      if (!wallAbove) {
+        testForWalls = document.getElementById(`box-${el+(gridUp*j)}`).style.background
+        if (testForWalls == 'white') {
+          wallAbove = true;
+          console.log('wall above')
+        }
+      }
+      if (!wallBelow) {
+        testForWalls = document.getElementById(`box-${el+(gridDown*j)}`).style.background
+        if (testForWalls == 'white') {
+          wallBelow = true;
+          console.log('wall below')
+        }
+      }
+      if (!wallAhead) {
+        if(!wallAbove) {
+          gridPiece = document.getElementById(`box-${el+i-1+(gridUp*j)}`)
+          gridPiece.style.background = 'yellow'
+          bombArr.push(gridPiece)
+        }
+        if(!wallBelow) {
+          gridPiece = document.getElementById(`box-${el+i-1+(gridDown*j)}`)
+          gridPiece.style.background = 'yellow'
+          bombArr.push(gridPiece)
+        }
+      }
+      if (!wallBehind) {
+        if(!wallAbove) {
+          gridPiece = document.getElementById(`box-${el-i+1+(gridUp*j)}`)
+          gridPiece.style.background = 'yellow'
+          bombArr.push(gridPiece)
+        }
+        if(!wallBelow) {
+          gridPiece = document.getElementById(`box-${el-i+1+(gridDown*j)}`)
+          gridPiece.style.background = 'yellow'
+          bombArr.push(gridPiece)
+        }
+      }
+    }
+  }
+}
+
+let bombLit = false;
+//burlywood
+const bombColor = () => {
+  bombLit = true;
+  let stage = bombArr[0].style.background
+  for (let box of bombArr) {
+    if (box.style.background == 'yellow') {
+      box.style.background = 'burlywood';
+    } else {
+      box.style.background = 'grey';
+    }
+  }
+  console.log('loop ended ' + stage)
+  if (stage == 'yellow' || stage == 'burlywood') {
+    console.log('um')
+    longerPause(bombColor, 100)
+  } else {
+    console.log('ok')
+    longerPause(bombWipe, 100)
+  }
+}
+
+const bombWipe = () => {
+  while (bombArr.length > 0) {
+    bombArr[0].style.background = 'black';
+    bombArr.shift()
+  }
+  bombLit = false;
+  console.log('wipe')
+}
+
 // Key presses to change direction
 document.onkeydown = function(key) {
-
+  console.log(key.keyCode)
   switch (key.keyCode) {
     case 87: // Key: W, -100 represents up
       redPlayer.boxDirec = gridUp
@@ -288,6 +433,9 @@ document.onkeydown = function(key) {
       orangePlayer.boxDirec = gridRight
       orangePlayer.buttons++
       break;
+    case 20:
+      bomb(redPlayer.boxNum)
+      break;
     default:
       console.log('error')
       break;
@@ -305,6 +453,12 @@ const movePlayers = (style = 'grid') => {
     bluePlayer.status ? moveOne(bluePlayer) : undefined
     greenPlayer.status ? moveOne(greenPlayer) : undefined
     orangePlayer.status ? moveOne(orangePlayer) : undefined
+    if (bombArr.length > 0 && !bombLit) {
+      console.log('run')
+      bombLit = true;
+      longerPause(bombColor, 200)
+      console.log('ning')
+    }
     anotherPause('grid')
     // The else is all pixel method related
   } else {
@@ -449,6 +603,7 @@ const checkWinner = () => {
     if (player.status == true) {
       console.log('are we...')
       player.wins++
+      player.element.innerText = player.wins
 
       let rgbColor;
       let words;

@@ -44,6 +44,11 @@
             <option value="finite">Finite</option>
             <option value="infinite">Infinite</option>
           </select>
+          <label for="specials" class="menu-stuff">Special Abilities: </label>
+          <select class="menu-stuff" id="specials">
+            <option value="false">Off</option>
+            <option value="true">On</option>
+          </select>
           <button id='settings' class="menu-stuff" onclick="setAndStart(0)">NEXT</button>
         </div>
 
@@ -73,6 +78,56 @@
 
         <div id="winner-anim"></div>
       </div>
+
+      <div id='inventory'>
+        <div class="inv">
+          <div class="wins" id="red-wins">Wins: <span id="r-w">0</span></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+
+        <div class="inv">
+          <div class="wins" id="blue-wins">Wins: <span id="b-w">0</span></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+
+        <div class="inv">
+          <div class="wins" id="green-wins">Wins: <span id="g-w">0</span></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+
+        <div class="inv">
+          <div class="wins" id="orange-wins">Wins: <span id="o-w">0</span></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
     </div>
 
     <div id="stats">
@@ -88,8 +143,8 @@
       </div>
       <button onclick="setAndStart(3)">NEXT</button>
     </div>
-    <button onclick="movePlayers('grid')">Grid</button>
-    <button onclick="movePlayers('pixel')">Pixel</button>
+    <!-- <button onclick="movePlayers('grid')">Grid</button>
+    <button onclick="movePlayers('pixel')">Pixel</button> -->
 
     <!-- <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas> -->
     <script src="js/app.js"></script>

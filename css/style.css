@@ -116,3 +116,29 @@ button {
 .player-para {
   visibility: hidden;
 }
+#inventory {
+  display: flex;
+}
+.inv {
+  display: flex;
+  border: 1px solid aqua;
+}
+.slot {
+  width: 10px;
+  border: 1px solid aquamarine;
+}
+.wins span {
+  color: grey;
+}
+#red-wins {
+  color: red;
+}
+#blue-wins {
+  color: blue;
+}
+#green-wins {
+  color: green;
+}
+#orange-wins {
+  color: orange;
+}
