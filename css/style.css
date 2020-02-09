@@ -12,17 +12,17 @@ body {
   display: grid;
   grid-template-rows: repeat(110, 6px);
   grid-template-columns: repeat(180, 6px);
-  width: 1080px;
+  /* width: 1080px; */
 }
 #container {
   /* width: 500px;
   height: 500px; */
 }
-.boxes {
+.grid-piece {
   border: 1px solid blue;
 }
 #area div {
-  /* border: 1px solid grey; */
+  /* border: 1px solid blue; */
 }
 .red-pixel {
   position: absolute;
@@ -90,7 +90,7 @@ body {
 .player-stat {
   visibility: hidden;
   border: 1px solid white;
-  padding: 20px;
+  padding: 50px;
 }
 .menu-stuff {
   align-self: center;

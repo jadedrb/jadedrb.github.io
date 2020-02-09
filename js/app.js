@@ -4,54 +4,75 @@ function addDivs(number) {
   for(let i = 1; i <= number; i++) {
     let newDiv = document.createElement('div')
     newDiv.id = `box-${i}`
+    newDiv.className = 'grid-piece'
     // This crazy if statement determines the white borders
-    if(i <= 180 || i >= (number - 179) || i % 180 == 0 || (i - 1) % 180 == 0){
-      newDiv.style.background = 'white'
+    if (mapSize == 'large') {
+      if(i <= 180 || i >= (number - 179) || i % 180 == 0 || (i - 1) % 180 == 0){
+        newDiv.style.background = 'white'
+      }
+    } else if (mapSize == 'medium') {
+      if(i <= 130 || i >= (number - 129) || i % 130 == 0 || (i - 1) % 130 == 0){
+        newDiv.style.background = 'white'
+      }
+    } else {
+      if(i <= 100 || i >= (number - 99) || i % 100 == 0 || (i - 1) % 100 == 0){
+        newDiv.style.background = 'white'
+      }
     }
     area.append(newDiv)
   }
 }
 
-addDivs(110 * 180);
-let numberOfDivs = 110 * 180
+let numberOfDivs;
 let gridUp;
 let gridDown;
 let gridLeft;
 let gridRight;
-
-
-// window.addEventListener('keydown', function (e) {
-//     console.log(e.keyCode)
-// });
 
 // Sets initial movement direction and gridDirection values
 const setDirection = (method) => {
   let random = Math.floor(Math.random() * 4)
   let result;
   if (method == 'grid') {
-    gridUp = -180
-    gridDown = 180
     gridLeft = -1
     gridRight = 1
+    if (mapSize == 'large') {
+      redPlayer.boxDirec = gridDown;
+      bluePlayer.boxDirec = gridDown;
+      greenPlayer.boxDirec = gridUp;
+      orangePlayer.boxDirec = gridUp;
+      redPlayer.boxNum = 200
+      bluePlayer.boxNum = 340
+      greenPlayer.boxNum = 19500
+      orangePlayer.boxNum = 19380
+    } else if (mapSize == 'medium') {
+      redPlayer.boxDirec = gridDown;
+      bluePlayer.boxDirec = gridUp;
+      greenPlayer.boxDirec = gridUp;
+      orangePlayer.boxDirec = gridDown;
+      redPlayer.boxNum = 150
+      bluePlayer.boxNum = 13500
+      greenPlayer.boxNum = 13440
+      orangePlayer.boxNum = 210
+    } else {
+      redPlayer.boxDirec = gridDown;
+      bluePlayer.boxDirec = gridUp;
+      greenPlayer.boxDirec = gridUp;
+      orangePlayer.boxDirec = gridDown;
+      redPlayer.boxNum = 110
+      bluePlayer.boxNum = 9890
+      greenPlayer.boxNum = 9830
+      orangePlayer.boxNum = 160
+    }
   } else {
     gridUp = 'up'
     gridDown = 'down'
     gridLeft = 'left'
     gridRight = 'right'
   }
-  // if (random == 0) {
-  //   result = gridUp
-  // } else if (random == 1){
-  //   result = gridDown
-  // } else if (random == 0){
-  //   result = gridLeft
-  // } else {
-  //   result = gridRight
-  // }
-  // return result;
 }
 
-// red player / player one object
+// Blueprint for all four players
 class Player {
   constructor(box, color, name) {
     this.boxNum = box;
@@ -60,6 +81,7 @@ class Player {
     this.name = name;
     this.boxDirec = undefined;
     this.buttons = 0;
+    this.kills = 0;
     this.points = 0;
     this.growth = 0;
     this.potential = 10;
@@ -72,6 +94,7 @@ class Player {
   }
 }
 
+// Create four players based off class blueprint above
 let redPlayer = new Player(200, 'red', 'Red')
 let bluePlayer = new Player(340, 'blue', 'Blue')
 let greenPlayer = new Player(19500, 'green', 'Green')
@@ -88,44 +111,57 @@ let rounds;
 let death;
 let highScore = 0;
 let tailScore = 0;
-// let redPlayer = {
-//   boxNum: 200,
-//   boxArr: [],
-//   boxColor: 'red',
-//   boxDirec: undefined,
-//   points: 0,
-//   status: true,
-//   pixelCoor: { // x is left and right, y is up and down
-//     x: Math.floor(Math.random() * 1000),
-//     y: Math.floor(Math.random() * 500)
-//   }
-// }
-//
-// // blue player / player two object
-// let bluePlayer = {
-//   boxNum: 190,
-//   boxArr: [],
-//   boxColor: 'blue',
-//   boxDirec: undefined,
-//   points: 0,
-//   status: true,
-//   pixelCoor: {
-//     x: Math.floor(Math.random() * 1000),
-//     y: Math.floor(Math.random() * 500)
-//   }
-// }
+let mapSize;
+
+/// BUG REPORT ///
+// Setting to Infinite changes the start position for some reason
+
+// jQuery to change the CSS grid template of area div
+$( "#settings" ).on( "click", function() {
+  console.log('jquery!')
+  let mapSetting = document.getElementById('arena-size').value
+
+  if (mapSetting != mapSize) {
+    mapSize = mapSetting
+    let areaDiv = document.getElementById('area')
+    $('.grid-piece').remove();
+    if (mapSize == 'large') {
+      console.log('this is large')
+      gridDown = 180
+      gridUp = -180
+      numberOfDivs = 180 * 110
+      $('#area').css( "grid-template-columns", "repeat(180, 6px)" );
+      $('#area').css( "grid-template-rows", "repeat(110, 6px)" );
+      addDivs(110 * 180);
+    } else if (mapSize == 'medium') {
+      console.log('this is medium')
+      gridDown = 130
+      gridUp = -130
+      numberOfDivs = 105 * 130
+      $('#area').css( "grid-template-columns", "repeat(130, 6px)" );
+      $('#area').css( "grid-template-rows", "repeat(105, 6px)" );
+      addDivs(105 * 130);
+    } else {
+      console.log('this is small')
+      gridDown = 100
+      gridUp = -100
+      numberOfDivs = 100 * 100
+      $('#area').css( "grid-template-columns", "repeat(100, 6px)" );
+      $('#area').css( "grid-template-rows", "repeat(100, 6px)" );
+      addDivs(100 * 100);
+    }
+    mapSize = mapSetting
+    console.log(areaDiv)
+  }
+});
 
 const setAndStart = (menu) => {
-
-  // redPlayer = new Player(200, 'red')
-  // bluePlayer = new Player(340, 'blue')
-  // greenPlayer = new Player(19500, 'green')
-  // orangePlayer = new Player(19380, 'orange')
 
   if (menu == 0) {
     rounds = 1;
 
     playerArr.forEach(player => {
+      player.kills = 0
       player.wins = 0
       player.growth = 0
       player.buttons = 0
@@ -138,8 +174,6 @@ const setAndStart = (menu) => {
     let arenaSize = document.getElementById('arena-size').value
     document.getElementById('menu').style.visibility = 'hidden'
     document.getElementById('controls').style.visibility = 'visible'
-    console.log(players)
-    console.log(arenaSize)
     firstTo = document.getElementById('first-to').value
     gameType = document.getElementById('tail-length').value
     activePlayers = players
@@ -179,7 +213,6 @@ const howManyPlayers = (num) => {
         greenPlayer.status = true;
         if (num > 3) {
           orangePlayer.status = true;
-          console.log('hey all 4')
         }
       }
     }
@@ -266,14 +299,6 @@ const movePlayers = (style = 'grid') => {
     if (!gameStarted) {
       gameStarted = true; // Do this one time at start of game
       setDirection('grid');
-      redPlayer.boxDirec = gridDown;
-      bluePlayer.boxDirec = gridDown;
-      greenPlayer.boxDirec = gridUp;
-      orangePlayer.boxDirec = gridUp;
-      redPlayer.boxNum = 200
-      bluePlayer.boxNum = 340
-      greenPlayer.boxNum = 19500
-      orangePlayer.boxNum = 19380
       activePlayers == 1 ? firstTo = 1 : undefined
     }
     redPlayer.status ? moveOne(redPlayer) : undefined // Start moving players
@@ -323,16 +348,16 @@ const checkCollisionGrid = (player, checkDiv) => {
     if (player.boxColor != hit && hit != 'white') {
       switch (hit) {
         case 'red':
-          redPlayer.points++
+          redPlayer.kills++
           break;
         case 'blue':
-          bluePlayer.points++
+          bluePlayer.kills++
           break;
         case 'green':
-          greenPlayer.points++
+          greenPlayer.kills++
           break;
         case 'orange':
-          orangePlayer.points++
+          orangePlayer.kills++
           break;
         case 'purple':
           nonLethal = true;
@@ -359,10 +384,6 @@ const checkCollisionGrid = (player, checkDiv) => {
     return false;
   }
   return true;
-  // console.log(checkDiv.style.background)
-  // if (checkDiv && checkDiv.style.background == ) {
-  //
-  // }
 }
 
 const removePlayer = (player) => {
