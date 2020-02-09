@@ -69,6 +69,29 @@ body {
   color: white;
   visibility: hidden;
 }
+#stats {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  top: 250px;
+  left: 200px;
+  color: white;
+  visibility: hidden;
+}
+#stats-here {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 700px;
+  margin-bottom: 30px;
+}
+.player-stat {
+  visibility: hidden;
+  border: 1px solid white;
+  padding: 20px;
+}
 .menu-stuff {
   align-self: center;
   width: 130px;

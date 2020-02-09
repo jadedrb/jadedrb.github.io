@@ -21,6 +21,7 @@
           </select>
           <label for="first-to" class="menu-stuff">Game Length</label>
           <select class="menu-stuff" id="first-to">
+            <option value="1">First to 1</option>
             <option value="3">First to 3</option>
             <option value="5">First to 5</option>
             <option value="10">First to 10</option>
@@ -74,6 +75,17 @@
     </div>
 
     <div id="stats">
+      <div id="stats-here">
+        <div class="player-stat" id="red-stats">
+        </div>
+        <div class="player-stat" id="blue-stats">
+        </div>
+        <div class="player-stat" id="green-stats">
+        </div>
+        <div class="player-stat" id="orange-stats">
+        </div>
+      </div>
+      <button onclick="setAndStart(3)">NEXT</button>
     </div>
     <button onclick="movePlayers('grid')">Grid</button>
     <button onclick="movePlayers('pixel')">Pixel</button>
