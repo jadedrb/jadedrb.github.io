@@ -5,7 +5,7 @@ function addDivs(number) {
     let newDiv = document.createElement('div')
     newDiv.id = `box-${i}`
     newDiv.className = 'grid-piece'
-    // This crazy if statement determines the white borders
+    // These crazy if statements determine the white borders
     if (mapSize == 'large') {
       if(i <= 180 || i >= (number - 179) || i % 180 == 0 || (i - 1) % 180 == 0){
         newDiv.style.background = 'white'
@@ -102,6 +102,7 @@ let greenPlayer = new Player(19500, 'green', 'Green', document.getElementById('g
 let orangePlayer = new Player(19380, 'orange', 'Green', document.getElementById('o-w'))
 let playerArr = [redPlayer, bluePlayer, greenPlayer, orangePlayer]
 
+// Global variables for settings and stats
 let numberOfPlayers;
 let activePlayers;
 let firstTo;
@@ -114,9 +115,6 @@ let highScore = 0;
 let tailScore = 0;
 let mapSize;
 let enableSpecials = false;
-
-/// BUG REPORT ///
-// Setting to Infinite changes the start position for some reason
 
 // jQuery to change the CSS grid template of area div
 $( "#settings" ).on( "click", function() {
@@ -161,7 +159,7 @@ const setAndStart = (menu) => {
 
   if (menu == 0) {
     rounds = 1;
-
+    // Reset each players stats
     playerArr.forEach(player => {
       player.kills = 0
       player.wins = 0
@@ -171,7 +169,7 @@ const setAndStart = (menu) => {
       player.element.innerText = '0'
       player.potential = 10
     })
-
+    // This changes the menu from settings to controls (and saves your setting values)
     gameSpeed = Number(document.getElementById('game-speed').value)
     let players = Number(document.getElementById('player-count').value)
     let arenaSize = document.getElementById('arena-size').value
@@ -188,6 +186,7 @@ const setAndStart = (menu) => {
     showInventory()
     howManyPlayers(players)
   } else if (menu == 1){
+    // This hides controls menu and starts the game
     document.getElementById('controls').style.visibility = 'hidden'
     document.getElementById('red-para').style.visibility = 'hidden'
     document.getElementById('blue-para').style.visibility = 'hidden'
@@ -199,6 +198,7 @@ const setAndStart = (menu) => {
     orangePlayer.name = document.getElementById('orange-name').value
     movePlayers('grid')
   } else {
+    // This brings up the start of game menu with settings
     document.getElementById('stats').style.visibility = 'hidden'
     document.getElementById('red-stats').style.visibility = 'hidden'
     document.getElementById('blue-stats').style.visibility = 'hidden'
@@ -207,7 +207,7 @@ const setAndStart = (menu) => {
     document.getElementById('menu').style.visibility = 'visible'
   }
 }
-
+// This determines which players are participating
 const howManyPlayers = (num) => {
   numberOfPlayers = num;
   if (num >= 1) {
@@ -223,7 +223,7 @@ const howManyPlayers = (num) => {
     }
   }
 }
-
+// This shows the appropriate players wins counter and/or inventory
 const showInventory = () => {
   let inv = document.getElementsByClassName('inv')
   let slot = document.getElementsByClassName('slot')
@@ -248,6 +248,7 @@ const showInventory = () => {
     inv[2].style.display = 'flex'
     inv[3].style.display = 'flex'
   }
+  // This loop shows inventory slots if applicable
   console.log(enableSpecials)
   for (let i = 0; i < slot.length; i++) {
     enableSpecials ? slot[i].style.display = 'flex' : slot[i].style.display = 'none'
@@ -257,7 +258,7 @@ const showInventory = () => {
 let bombArr = []
 
 // This is an ability. A feature that may or may not be implemented
-const bomb = (el) => {
+const bomb = (el, bomber) => {
   let wallAhead = false; // As soon as a wall is detected, the explosion stops
   let wallBehind = false; // rendering in that direction
   let wallAbove = false;
@@ -273,6 +274,7 @@ const bomb = (el) => {
     if (testForWalls != 'white') {
       gridPiece.style.background = 'yellow'
       bombArr.push(gridPiece)
+      fireyDeath(bomber, Number(gridPiece.id.split('-')[1])); // Gives the box number of recently effected div
     } else {
       wallAhead = true;
       console.log('wall ahead')
@@ -283,6 +285,7 @@ const bomb = (el) => {
     if(testForWalls != 'white') {
       gridPiece.style.background = 'yellow'
       bombArr.push(gridPiece)
+      fireyDeath(bomber, Number(gridPiece.id.split('-')[1]));
     } else {
       wallBehind = true;
       console.log('wall behind')
@@ -310,11 +313,13 @@ const bomb = (el) => {
           gridPiece = document.getElementById(`box-${el+i-1+(gridUp*j)}`)
           gridPiece.style.background = 'yellow'
           bombArr.push(gridPiece)
+          fireyDeath(bomber, Number(gridPiece.id.split('-')[1]));
         }
         if(!wallBelow) {
           gridPiece = document.getElementById(`box-${el+i-1+(gridDown*j)}`)
           gridPiece.style.background = 'yellow'
           bombArr.push(gridPiece)
+          fireyDeath(bomber, Number(gridPiece.id.split('-')[1]));
         }
       }
       if (!wallBehind) {
@@ -322,11 +327,13 @@ const bomb = (el) => {
           gridPiece = document.getElementById(`box-${el-i+1+(gridUp*j)}`)
           gridPiece.style.background = 'yellow'
           bombArr.push(gridPiece)
+          fireyDeath(bomber, Number(gridPiece.id.split('-')[1]));
         }
         if(!wallBelow) {
           gridPiece = document.getElementById(`box-${el-i+1+(gridDown*j)}`)
           gridPiece.style.background = 'yellow'
           bombArr.push(gridPiece)
+          fireyDeath(bomber, Number(gridPiece.id.split('-')[1]));
         }
       }
     }
@@ -334,7 +341,8 @@ const bomb = (el) => {
 }
 
 let bombLit = false;
-//burlywood
+
+// Adds a bit of animation/color to the bomb ability
 const bombColor = () => {
   bombLit = true;
   let stage = bombArr[0].style.background
@@ -355,6 +363,7 @@ const bombColor = () => {
   }
 }
 
+// Turns all bomb effected divs back to their original color
 const bombWipe = () => {
   while (bombArr.length > 0) {
     bombArr[0].style.background = 'black';
@@ -364,7 +373,27 @@ const bombWipe = () => {
   console.log('wipe')
 }
 
-// Key presses to change direction
+// Kills all players in bomb effected area divs
+const fireyDeath = (bomber, div) => {
+  let grantKill = 0
+  let grantPlayer;
+  console.log(bomber)
+  for (let player of playerArr) {
+    if (player.boxColor == bomber) { grantPlayer = player }
+    if (player.boxColor != bomber && player.boxNum == div && player.status == true) {
+      player.boxNum = 0
+      console.log('You killed ' + player.boxColor)
+      grantKill = 1
+      numberOfPlayers--
+      player.status = false;
+      removePlayer(player)
+      if (numberOfPlayers == 1) { exitAnotherPause = true }
+    }
+  }
+  grantPlayer.kills += grantKill
+}
+
+// Key presses to change direction, use abilities, and navigate inventory
 document.onkeydown = function(key) {
   console.log(key.keyCode)
   switch (key.keyCode) {
@@ -433,8 +462,25 @@ document.onkeydown = function(key) {
       orangePlayer.boxDirec = gridRight
       orangePlayer.buttons++
       break;
-    case 20:
-      bomb(redPlayer.boxNum)
+    case 69: // Key: E (red player fire special)
+      if (gameStarted && enableSpecials) { bomb(redPlayer.boxNum, redPlayer.boxColor) }
+      break;
+    case 81: // Key: Q (red player navigate invetory)
+      break;
+    case 85: // Key: U (green player fire special)
+      if (gameStarted && enableSpecials) { bomb(greenPlayer.boxNum, greenPlayer.boxColor) }
+      break;
+    case 84: // Key: T (green player navigate invetory)
+      break;
+    case 219: // Key: { (orange player fire special)
+      if (gameStarted && enableSpecials) { bomb(orangePlayer.boxNum, orangePlayer.boxColor) }
+      break;
+    case 79: // Key: O (orange player navigate invetory)
+      break;
+    case 16: // Key: Shift (blue player fire special)
+      if (gameStarted && enableSpecials) { bomb(bluePlayer.boxNum, bluePlayer.boxColor) }
+      break;
+    case 18: // Key: alt (blue player navigate invetory)
       break;
     default:
       console.log('error')
@@ -442,6 +488,7 @@ document.onkeydown = function(key) {
   };
 }
 
+// This starts and continues player movement throughout game
 const movePlayers = (style = 'grid') => {
   if (style == 'grid') {
     if (!gameStarted) {
@@ -495,6 +542,7 @@ const moveOne = (player) => {
   }
 }
 
+// Checks if a moving player has just touched an enemy trail
 const checkCollisionGrid = (player, checkDiv) => {
   let nonLethal = false;
   let hit = checkDiv.style.background
@@ -540,6 +588,7 @@ const checkCollisionGrid = (player, checkDiv) => {
   return true;
 }
 
+// Removes a player trail after death
 const removePlayer = (player) => {
   for (let i = 0; player.boxArr.length > 0; ) {
     if (player.boxArr[0].style.background == player.boxColor) {
@@ -549,6 +598,7 @@ const removePlayer = (player) => {
   }
 }
 
+// Removes uneaten food from area after game round
 const removeFood = () => {
   foodOnArea = 0;
   for (let i = 0; foodArr.length > 0; ) {
@@ -565,6 +615,7 @@ let chanceOfFood = 0;
 let foodOnArea = 0;
 let foodArr = []
 
+// Handles game speed, food distribution, and triggers a win function
 const anotherPause = (style) => {
   if (!exitAnotherPause) {
     chanceOfFood++
@@ -594,10 +645,12 @@ const anotherPause = (style) => {
   }
 }
 
+// Runs a function after a specified time
 const longerPause = (func, time) => {
   setTimeout(()=> func(), time);
 }
 
+// Determines winner and displays winning animations
 const checkWinner = () => {
   for (let player of playerArr) {
     if (player.status == true) {
@@ -645,6 +698,7 @@ const checkWinner = () => {
   }
 }
 
+// Takes an element, a starting rgb color, and a target rgb color for animation
 function fadeThis(element, words, startColor, finishColor, nextFunc, time = 1000) {
     element.innerHTML = words;
     let timer = setInterval(() => {
@@ -660,6 +714,7 @@ function fadeThis(element, words, startColor, finishColor, nextFunc, time = 1000
     }, .5);
 }
 
+// Triggers a next round animation
 const nextRound = () => {
   gameType == 'finite' ? playerArr.forEach(player => player.points += player.potential) : undefined
   let displayRound = document.getElementById('winner-anim')
@@ -706,6 +761,7 @@ const endGame = () => {
   }
 }
 
+// Shows end of game stats based off game mode and number of players
 const buildStats = (playerDiv, player) => {
 
   let record;
@@ -733,7 +789,7 @@ const buildStats = (playerDiv, player) => {
 
 
 ////
-////
+//// BELOW ITEMS ARE EXPERIMENTAL OR DISCONTINUED
 ////
 
 
