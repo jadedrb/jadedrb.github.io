@@ -75,6 +75,8 @@ const setDirection = (method) => {
 // Blueprint for all four players
 class Player {
   constructor(box, color, name, winDomId) {
+    this.inventory = [null, null, null, null, null, null, null, null];
+    this.invNum = 0;
     this.boxNum = box;
     this.boxArr = [];
     this.boxColor = color;
@@ -248,6 +250,7 @@ const showInventory = () => {
     inv[2].style.display = 'flex'
     inv[3].style.display = 'flex'
   }
+  if (enableSpecials) { populateInv(activePlayers) }
   // This loop shows inventory slots if applicable
   console.log(enableSpecials)
   for (let i = 0; i < slot.length; i++) {
@@ -463,29 +466,95 @@ document.onkeydown = function(key) {
       orangePlayer.buttons++
       break;
     case 69: // Key: E (red player fire special)
-      if (gameStarted && enableSpecials) { bomb(redPlayer.boxNum, redPlayer.boxColor) }
+      if (gameStarted && enableSpecials &&
+        redPlayer.status == true &&
+        redPlayer.inventory[redPlayer.invNum] != null) {
+          useAbility(redPlayer, redPlayer.inventory[redPlayer.invNum], redPlayer.invNum)
+        }
       break;
-    case 81: // Key: Q (red player navigate invetory)
+    case 81: // Key: Q (red player navigate inventory)
+      if (gameStarted && enableSpecials &&
+        redPlayer.status == true) {
+          navigate(redPlayer)
+        }
       break;
     case 85: // Key: U (green player fire special)
-      if (gameStarted && enableSpecials) { bomb(greenPlayer.boxNum, greenPlayer.boxColor) }
+      if (gameStarted && enableSpecials &&
+        greenPlayer.status == true &&
+        greenPlayer.inventory[greenPlayer.invNum] != null) {
+          useAbility(greenPlayer, greenPlayer.inventory[greenPlayer.invNum], greenPlayer.invNum)
+        }
       break;
     case 84: // Key: T (green player navigate invetory)
+      if (gameStarted && enableSpecials &&
+        greenPlayer.status == true) {
+          navigate(greenPlayer)
+        }
       break;
     case 219: // Key: { (orange player fire special)
-      if (gameStarted && enableSpecials) { bomb(orangePlayer.boxNum, orangePlayer.boxColor) }
+      if (gameStarted && enableSpecials &&
+        orangePlayer.status == true &&
+        orangePlayer.inventory[orangePlayer.invNum] != null) {
+          useAbility(orangePlayer, orangePlayer.inventory[orangePlayer.invNum], orangePlayer.invNum)
+        }
       break;
     case 79: // Key: O (orange player navigate invetory)
+      if (gameStarted && enableSpecials &&
+        orangePlayer.status == true) {
+          navigate(orangePlayer)
+        }
       break;
     case 16: // Key: Shift (blue player fire special)
-      if (gameStarted && enableSpecials) { bomb(bluePlayer.boxNum, bluePlayer.boxColor) }
+      if (gameStarted && enableSpecials &&
+        bluePlayer.status == true &&
+        bluePlayer.inventory[bluePlayer.invNum] != null) {
+          useAbility(bluePlayer, bluePlayer.inventory[bluePlayer.invNum], bluePlayer.invNum)
+        }
       break;
     case 18: // Key: alt (blue player navigate invetory)
+      if (gameStarted && enableSpecials &&
+        bluePlayer.status == true) {
+          navigate(bluePlayer)
+        }
       break;
     default:
       console.log('error')
       break;
   };
+}
+
+const useAbility = (player, ability, clear) => {
+  document.getElementsByClassName(`${player.boxColor}-slot`)[clear].innerText = ''
+  player.inventory[clear] = null
+  ability(player.boxNum, player.boxColor)
+}
+
+// Fills DOM inventory and player inventory array
+const populateInv = (players) => {
+  console.log('..')
+  let slotsArr = [document.getElementsByClassName('red-slot'),
+                  document.getElementsByClassName('blue-slot'),
+                  document.getElementsByClassName('green-slot'),
+                  document.getElementsByClassName('orange-slot')]
+  for (let i = players - 1; i >= 0; i--) {
+    console.log('.l.')
+    for (let j = 0; j < slotsArr[i].length; j++) {
+      let random = Math.floor(Math.random() * 3)
+      if (random >= 0) {
+        slotsArr[i][j].innerText = 'B'
+        playerArr[i].inventory[j] = bomb
+        console.log('got there')
+      }
+    }
+  }
+}
+
+// Highlights the next inventory item to the right
+const navigate = (player) => {
+  let inv = document.getElementsByClassName(`${player.boxColor}-slot`)
+  player.invNum > 6 ? player.invNum = 0 : player.invNum++
+  inv[player.invNum].style.border = '3px solid brown';
+  player.invNum == 0 ? inv[7].style.border = '1px solid aquamarine' : inv[player.invNum - 1].style.border = '1px solid aquamarine'
 }
 
 // This starts and continues player movement throughout game
