@@ -13,7 +13,56 @@
         <div class="blue-pixel"></div>
 
         <div id="menu">
-          <label for="player-count" class="menu-stuff">Number of Players</label>
+
+          <div class="category">
+            <div class="what-it-is">Number of Players</div>
+            <div class="options options-four num-players">
+              <div id="num-play-one" onclick="setThis(1)">One</div>
+              <div id="num-play-two" onclick="setThis(2)">Two</div>
+              <div id="num-play-three" onclick="setThis(3)">Three</div>
+              <div id="num-play-four" onclick="setThis(4)">Four</div>
+            </div>
+          </div>
+          <div class="category">
+            <div class="what-it-is">Game Length</div>
+            <div class="options options-four game-l">
+              <div id="best-one" onclick="setThis(5)">Best of 1</div>
+              <div id="best-three" onclick="setThis(6)">Best of 3</div>
+              <div id="best-five" onclick="setThis(7)">Best of 5</div>
+              <div id="best-seven" onclick="setThis(8)">Best of 7</div>
+            </div>
+          </div>
+          <div class="category">
+            <div class="what-it-is">Area Size</div>
+            <div class="options options-three a-size">
+              <div id="small-size" onclick="setThis(9)">Small</div>
+              <div id="med-size" onclick="setThis(10)">Medium</div>
+              <div id="large-size" onclick="setThis(11)">Large</div>
+            </div>
+          </div>
+          <div class="category">
+            <div class="what-it-is">Game Speed</div>
+            <div class="options options-three g-speed">
+              <div id="slow" onclick="setThis(12)">Slow</div>
+              <div id="normal" onclick="setThis(13)">Normal</div>
+              <div id="fast" onclick="setThis(14)">Fast</div>
+            </div>
+          </div>
+          <div class="category">
+            <div class="what-it-is">Tail Length</div>
+            <div class="options options-two t-length">
+              <div id="finite" onclick="setThis(15)">Finite</div>
+              <div id="infinite" onclick="setThis(16)">Infinite</div>
+            </div>
+          </div>
+          <div class="category">
+            <div class="what-it-is">Special Abilities</div>
+            <div class="options options-two s-ab">
+              <div id="ab-off" onclick="setThis(17)">Off</div>
+              <div id="ab-on" onclick="setThis(18)">On</div>
+            </div>
+          </div>
+          <!-- <label for="player-count" class="menu-stuff">Number of Players</label>
           <select class="menu-stuff" id="player-count">
             <option value="1">One</option>
             <option value="2">Two</option>
@@ -21,11 +70,11 @@
             <option value="4">Four</option>
           </select>
           <label for="first-to" class="menu-stuff">Game Length</label>
-          <select class="menu-stuff" id="first-to">
-            <option value="1">First to 1</option>
-            <option value="3">First to 3</option>
-            <option value="5">First to 5</option>
-            <option value="10">First to 10</option>
+          <select class="menu-stuff" id="best-of">
+            <option value="1">Best of 1</option>
+            <option value="2">Best of 3</option>
+            <option value="3">Best of 5</option>
+            <option value="4">Best of 7</option>
           </select>
           <label for="arena-size" class="menu-stuff">Arena Size: </label>
           <select class="menu-stuff" id="arena-size">
@@ -49,7 +98,7 @@
             <option value="false">Off</option>
             <option value="true">On</option>
           </select>
-          <button id='settings' class="menu-stuff" onclick="setAndStart(0)">NEXT</button>
+          <button id='settings' class="menu-stuff" onclick="setAndStart(0)">NEXT</button> -->
         </div>
 
         <div id="controls">
@@ -127,7 +176,9 @@
           <div class="slot orange-slot"></div>
           <div class="slot orange-slot"></div>
         </div>
+
       </div>
+      <div id="death-history"></div>
     </div>
 
     <div id="stats">

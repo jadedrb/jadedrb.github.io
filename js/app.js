@@ -89,6 +89,7 @@ class Player {
     this.element = winDomId;
     this.potential = 10;
     this.wins = 0;
+    this.death = '';
     this.status = undefined;
     this.pixelCoor = { // x is left and right, y is up and down
       x: Math.floor(Math.random() * 1000),
@@ -116,12 +117,13 @@ let death;
 let highScore = 0;
 let tailScore = 0;
 let mapSize;
+let mapSetting;
 let enableSpecials = false;
 
 // jQuery to change the CSS grid template of area div
-$( "#settings" ).on( "click", function() {
+function changeMapSize() {
   console.log('jquery!')
-  let mapSetting = document.getElementById('arena-size').value
+  // let mapSetting = document.getElementById('arena-size').value
 
   if (mapSetting != mapSize) {
     mapSize = mapSetting
@@ -155,7 +157,157 @@ $( "#settings" ).on( "click", function() {
     mapSize = mapSetting
     console.log(areaDiv)
   }
-});
+}
+
+let categories = []
+
+const clearBackgroundColor = (idArr, category = undefined) => {
+  for (let div of idArr) {
+    document.getElementById(div).style.background = 'black'
+  }
+
+  if (category != undefined && categories.every(cat => cat != category)) {
+    categories.push(category)
+  }
+}
+
+const haveTheyClickedAllButtons = () => {
+  if (categories.length == 6) {
+    changeMapSize();
+    setAndStart(0);
+  }
+}
+// These are arrays full of id names for different categories. Useful for clearBackgroundColor function
+let numPlay = ['num-play-one','num-play-two','num-play-three','num-play-four']
+let gameL = ['best-one', 'best-three', 'best-five', 'best-seven']
+let areaS = ['small-size', 'med-size', 'large-size']
+let gameS = ['slow', 'normal', 'fast']
+let tailL = ['finite', 'infinite']
+let specAb = ['ab-off', 'ab-on']
+
+// This is for the settings window at start of game
+const setThis = (button) => {
+  switch (button) {
+    case 1:
+      clearBackgroundColor(numPlay, 1)
+      document.getElementById('num-play-one').style.background = 'purple'
+      activePlayers = 1
+      haveTheyClickedAllButtons()
+      break;
+    case 2: // gameSpeed, firstTo, enableSpecials
+      clearBackgroundColor(numPlay, 1)
+      document.getElementById('num-play-two').style.background = 'purple'
+      activePlayers = 2
+      haveTheyClickedAllButtons()
+      break;
+    case 3:
+      clearBackgroundColor(numPlay, 1)
+      document.getElementById('num-play-three').style.background = 'purple'
+      activePlayers = 3
+      haveTheyClickedAllButtons()
+      break;
+    case 4:
+      clearBackgroundColor(numPlay, 1)
+      document.getElementById('num-play-four').style.background = 'purple'
+      activePlayers = 4
+      haveTheyClickedAllButtons()
+      break;
+    case 5:
+      clearBackgroundColor(gameL, 2)
+      document.getElementById('best-one').style.background = 'purple'
+      firstTo = 1
+      haveTheyClickedAllButtons()
+      break;
+    case 6:
+      clearBackgroundColor(gameL, 2)
+      document.getElementById('best-three').style.background = 'purple'
+      firstTo = 2
+      haveTheyClickedAllButtons()
+      break;
+    case 7:
+      clearBackgroundColor(gameL, 2)
+      document.getElementById('best-five').style.background = 'purple'
+      firstTo = 3
+      haveTheyClickedAllButtons()
+      break;
+    case 8:
+      clearBackgroundColor(gameL, 2)
+      document.getElementById('best-seven').style.background = 'purple'
+      firstTo = 4
+      haveTheyClickedAllButtons()
+      break;
+    case 9:
+      clearBackgroundColor(areaS, 3)
+      document.getElementById('small-size').style.background = 'purple'
+      mapSetting = 'small'
+      haveTheyClickedAllButtons()
+      break;
+    case 10:
+      clearBackgroundColor(areaS, 3)
+      document.getElementById('med-size').style.background = 'purple'
+      mapSetting = 'medium'
+      haveTheyClickedAllButtons()
+      break;
+    case 11:
+      clearBackgroundColor(areaS, 3)
+      document.getElementById('large-size').style.background = 'purple'
+      mapSetting = 'large'
+      haveTheyClickedAllButtons()
+      break;
+    case 12:
+      clearBackgroundColor(gameS, 4)
+      document.getElementById('slow').style.background = 'purple'
+      gameSpeed = 100
+      haveTheyClickedAllButtons()
+      break;
+    case 13:
+      clearBackgroundColor(gameS, 4)
+      document.getElementById('normal').style.background = 'purple'
+      gameSpeed = 40
+      haveTheyClickedAllButtons()
+      break;
+    case 14:
+      clearBackgroundColor(gameS, 4)
+      document.getElementById('fast').style.background = 'purple'
+      gameSpeed = 10
+      haveTheyClickedAllButtons()
+      break;
+    case 15:
+      clearBackgroundColor(tailL, 5)
+      document.getElementById('finite').style.background = 'purple'
+      gameType = 'finite'
+      haveTheyClickedAllButtons()
+      break;
+    case 16:
+      clearBackgroundColor(tailL, 5)
+      document.getElementById('infinite').style.background = 'purple'
+      gameType = 'infinite'
+      haveTheyClickedAllButtons()
+      break;
+    case 17:
+      console.log('??')
+      clearBackgroundColor(specAb, 6)
+      document.getElementById('ab-off').style.background = 'purple'
+      enableSpecials = false
+      haveTheyClickedAllButtons()
+      break;
+    case 18:
+      console.log('???')
+      clearBackgroundColor(specAb, 6)
+      document.getElementById('ab-on').style.background = 'purple'
+      enableSpecials = true
+      haveTheyClickedAllButtons()
+      break;
+    default:
+  }
+}
+
+// Could maybe accomplish the same thing with this
+// $(()=>{
+//   $('button').on('click', (event)=>{
+//
+//     event.preventDefault();
+//     let borough = this.event.target.id
 
 const setAndStart = (menu) => {
 
@@ -172,21 +324,28 @@ const setAndStart = (menu) => {
       player.potential = 10
     })
     // This changes the menu from settings to controls (and saves your setting values)
-    gameSpeed = Number(document.getElementById('game-speed').value)
-    let players = Number(document.getElementById('player-count').value)
-    let arenaSize = document.getElementById('arena-size').value
+    // gameSpeed = Number(document.getElementById('game-speed').value)
+    // let players = Number(document.getElementById('player-count').value)
+    // let arenaSize = document.getElementById('arena-size').value
     document.getElementById('menu').style.visibility = 'hidden'
     document.getElementById('controls').style.visibility = 'visible'
-    firstTo = document.getElementById('first-to').value
-    gameType = document.getElementById('tail-length').value
-    enableSpecials = (document.getElementById('specials').value === 'true')
-    activePlayers = players
-    players > 0 ? document.getElementById('red-para').style.visibility = 'visible' : undefined
-    players > 1 ? document.getElementById('blue-para').style.visibility = 'visible' : undefined
-    players > 2 ? document.getElementById('green-para').style.visibility = 'visible' : undefined
-    players > 3 ? document.getElementById('orange-para').style.visibility = 'visible' : undefined
+    // firstTo = document.getElementById('best-of').value
+    // gameType = document.getElementById('tail-length').value
+    // enableSpecials = (document.getElementById('specials').value === 'true')
+    // activePlayers = players
+    categories = []
+    clearBackgroundColor(numPlay, undefined)
+    clearBackgroundColor(gameL, undefined)
+    clearBackgroundColor(areaS, undefined)
+    clearBackgroundColor(specAb, undefined)
+    clearBackgroundColor(tailL, undefined)
+    clearBackgroundColor(gameS, undefined)
+    activePlayers > 0 ? document.getElementById('red-para').style.visibility = 'visible' : undefined
+    activePlayers > 1 ? document.getElementById('blue-para').style.visibility = 'visible' : undefined
+    activePlayers > 2 ? document.getElementById('green-para').style.visibility = 'visible' : undefined
+    activePlayers > 3 ? document.getElementById('orange-para').style.visibility = 'visible' : undefined
     showInventory()
-    howManyPlayers(players)
+    howManyPlayers(activePlayers)
   } else if (menu == 1){
     // This hides controls menu and starts the game
     document.getElementById('controls').style.visibility = 'hidden'
@@ -207,6 +366,11 @@ const setAndStart = (menu) => {
     document.getElementById('green-stats').style.visibility = 'hidden'
     document.getElementById('orange-stats').style.visibility = 'hidden'
     document.getElementById('menu').style.visibility = 'visible'
+    document.getElementById('death-history').innerHTML = ''
+    $('.grid-piece').remove();
+    $('#area').css( "grid-template-columns", "repeat(180, 6px)" );
+    $('#area').css( "grid-template-rows", "repeat(110, 6px)" );
+    mapSize = null
   }
 }
 // This determines which players are participating
@@ -260,7 +424,7 @@ const showInventory = () => {
 
 let bombArr = []
 
-// This is an ability. A feature that may or may not be implemented
+// This is the bomb ability. It uses the players current box to calculate the blast radius
 const bomb = (el, bomber) => {
   let wallAhead = false; // As soon as a wall is detected, the explosion stops
   let wallBehind = false; // rendering in that direction
@@ -389,6 +553,8 @@ const fireyDeath = (bomber, div) => {
       grantKill = 1
       numberOfPlayers--
       player.status = false;
+      player.death = `${player.name} got blown up by a bomb`
+      logDeath(player.death)
       removePlayer(player)
       if (numberOfPlayers == 1) { exitAnotherPause = true }
     }
@@ -396,123 +562,175 @@ const fireyDeath = (bomber, div) => {
   grantPlayer.kills += grantKill
 }
 
+// This is the switcheroo ability. It swaps the player's current box and direction values for an opponents values
+const switcheroo = (player, color) => {
+  let random;
+  let targets = []
+  for (let i = 0; i < playerArr.length; i++) {
+    if (playerArr[i].boxColor != color && playerArr[i].status == true) {
+      targets.push(playerArr[i])
+    } else if (playerArr[i].boxColor == color) {
+      player = playerArr[i]
+    }
+  }
+  random = Math.floor(Math.random() * targets.length)
+  let playerInstanceOne = { box: player.boxNum, direction: player.boxDirec }
+  let playerInstanceTwo = { box: targets[random].boxNum, direction: targets[random].boxDirec }
+  targets[random].boxNum = playerInstanceOne.box
+  targets[random].boxDirec = playerInstanceOne.direction
+  player.boxNum = playerInstanceTwo.box
+  player.boxDirec = playerInstanceTwo.direction
+}
+
 // Key presses to change direction, use abilities, and navigate inventory
 document.onkeydown = function(key) {
   console.log(key.keyCode)
   switch (key.keyCode) {
     case 87: // Key: W, -100 represents up
-      redPlayer.boxDirec = gridUp
-      redPlayer.buttons++
+      if (redPlayer.boxDirec != gridDown) {
+        redPlayer.boxDirec = gridUp
+        redPlayer.buttons++
+      }
       break;
     case 83: // Key: S, 100 represents down
-      redPlayer.boxDirec = gridDown
-      redPlayer.buttons++
+      if (redPlayer.boxDirec != gridUp) {
+        redPlayer.boxDirec = gridDown
+        redPlayer.buttons++
+      }
       break;
     case 65: // Key: A, -1 represents left
-      redPlayer.boxDirec = gridLeft
-      redPlayer.buttons++
+      if (redPlayer.boxDirec != gridRight) {
+        redPlayer.boxDirec = gridLeft
+        redPlayer.buttons++
+      }
       break;
     case 68: // Key: D, 1 represents right
-      redPlayer.boxDirec = gridRight
-      redPlayer.buttons++
+      if (redPlayer.boxDirec != gridLeft) {
+        redPlayer.boxDirec = gridRight
+        redPlayer.buttons++
+      }
       break;
     case 38: // Key: Up
-      bluePlayer.boxDirec = gridUp
-      bluePlayer.buttons++
+      if (bluePlayer.boxDirec != gridDown) {
+        bluePlayer.boxDirec = gridUp
+        bluePlayer.buttons++
+      }
       break;
     case 40: // Key: Down
-      bluePlayer.boxDirec = gridDown
-      bluePlayer.buttons++
+      if (bluePlayer.boxDirec != gridUp) {
+        bluePlayer.boxDirec = gridDown
+        bluePlayer.buttons++
+      }
       break;
     case 37: // Key: Left
-      bluePlayer.boxDirec = gridLeft
-      bluePlayer.buttons++
+      if (bluePlayer.boxDirec != gridRight) {
+        bluePlayer.boxDirec = gridLeft
+        bluePlayer.buttons++
+      }
       break;
     case 39: // Key: Right
-      bluePlayer.boxDirec = gridRight
-      bluePlayer.buttons++
+      if (bluePlayer.boxDirec != gridLeft) {
+        bluePlayer.boxDirec = gridRight
+        bluePlayer.buttons++
+      }
       break;
 
     case 89: // Key: Y, -100 represents up
-      greenPlayer.boxDirec = gridUp
-      greenPlayer.buttons++
+      if (greenPlayer.boxDirec != gridDown) {
+        greenPlayer.boxDirec = gridUp
+        greenPlayer.buttons++
+      }
       break;
     case 72: // Key: H, 100 represents down
-      greenPlayer.boxDirec = gridDown
-      greenPlayer.buttons++
+      if (greenPlayer.boxDirec != gridUp) {
+        greenPlayer.boxDirec = gridDown
+        greenPlayer.buttons++
+      }
       break;
     case 71: // Key: G, -1 represents left
-      greenPlayer.boxDirec = gridLeft
-      greenPlayer.buttons++
+      if (greenPlayer.boxDirec != gridRight) {
+        greenPlayer.boxDirec = gridLeft
+        greenPlayer.buttons++
+      }
       break;
     case 74: // Key: J, 1 represents right
-      greenPlayer.boxDirec = gridRight
-      greenPlayer.buttons++
+      if (greenPlayer.boxDirec != gridLeft) {
+        greenPlayer.boxDirec = gridRight
+        greenPlayer.buttons++
+      }
       break;
     case 80: // Key: P
-      orangePlayer.boxDirec = gridUp
-      orangePlayer.buttons++
+      if (orangePlayer.boxDirec != gridDown) {
+        orangePlayer.boxDirec = gridUp
+        orangePlayer.buttons++
+      }
       break;
     case 186: // Key: :
-      orangePlayer.boxDirec = gridDown
-      orangePlayer.buttons++
+      if (orangePlayer.boxDirec != gridUp) {
+        orangePlayer.boxDirec = gridDown
+        orangePlayer.buttons++
+      }
       break;
     case 76: // Key: L
-      orangePlayer.boxDirec = gridLeft
-      orangePlayer.buttons++
+      if (orangePlayer.boxDirec != gridRight) {
+        orangePlayer.boxDirec = gridLeft
+        orangePlayer.buttons++
+      }
       break;
     case 222: // Key: "
-      orangePlayer.boxDirec = gridRight
-      orangePlayer.buttons++
+      if (orangePlayer.boxDirec != gridLeft) {
+        orangePlayer.boxDirec = gridRight
+        orangePlayer.buttons++
+      }
       break;
     case 69: // Key: E (red player fire special)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         redPlayer.status == true &&
         redPlayer.inventory[redPlayer.invNum] != null) {
           useAbility(redPlayer, redPlayer.inventory[redPlayer.invNum], redPlayer.invNum)
         }
       break;
     case 81: // Key: Q (red player navigate inventory)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         redPlayer.status == true) {
           navigate(redPlayer)
         }
       break;
     case 85: // Key: U (green player fire special)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         greenPlayer.status == true &&
         greenPlayer.inventory[greenPlayer.invNum] != null) {
           useAbility(greenPlayer, greenPlayer.inventory[greenPlayer.invNum], greenPlayer.invNum)
         }
       break;
     case 84: // Key: T (green player navigate invetory)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         greenPlayer.status == true) {
           navigate(greenPlayer)
         }
       break;
     case 219: // Key: { (orange player fire special)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         orangePlayer.status == true &&
         orangePlayer.inventory[orangePlayer.invNum] != null) {
           useAbility(orangePlayer, orangePlayer.inventory[orangePlayer.invNum], orangePlayer.invNum)
         }
       break;
     case 79: // Key: O (orange player navigate invetory)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         orangePlayer.status == true) {
           navigate(orangePlayer)
         }
       break;
     case 16: // Key: Shift (blue player fire special)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         bluePlayer.status == true &&
         bluePlayer.inventory[bluePlayer.invNum] != null) {
           useAbility(bluePlayer, bluePlayer.inventory[bluePlayer.invNum], bluePlayer.invNum)
         }
       break;
     case 18: // Key: alt (blue player navigate invetory)
-      if (gameStarted && enableSpecials &&
+      if (gameStarted && enableSpecials && !inMenus &&
         bluePlayer.status == true) {
           navigate(bluePlayer)
         }
@@ -523,6 +741,7 @@ document.onkeydown = function(key) {
   };
 }
 
+// Runs the ability in a slot then clears that slot
 const useAbility = (player, ability, clear) => {
   document.getElementsByClassName(`${player.boxColor}-slot`)[clear].innerText = ''
   player.inventory[clear] = null
@@ -539,10 +758,14 @@ const populateInv = (players) => {
   for (let i = players - 1; i >= 0; i--) {
     console.log('.l.')
     for (let j = 0; j < slotsArr[i].length; j++) {
-      let random = Math.floor(Math.random() * 3)
-      if (random >= 0) {
+      let random = Math.floor(Math.random() * 10)
+      if (random < 8) {
         slotsArr[i][j].innerText = 'B'
         playerArr[i].inventory[j] = bomb
+        console.log('got there')
+      } else if (random >= 8) {
+        slotsArr[i][j].innerText = 'S'
+        playerArr[i].inventory[j] = switcheroo
         console.log('got there')
       }
     }
@@ -564,6 +787,10 @@ const movePlayers = (style = 'grid') => {
       gameStarted = true; // Do this one time at start of game
       setDirection('grid');
       activePlayers == 1 ? firstTo = 1 : undefined
+    }
+    if (inMenus) {
+      inMenus = false
+      document.getElementById('death-history').innerHTML = ''
     }
     redPlayer.status ? moveOne(redPlayer) : undefined // Start moving players
     bluePlayer.status ? moveOne(bluePlayer) : undefined
@@ -619,20 +846,24 @@ const checkCollisionGrid = (player, checkDiv) => {
     if (player.boxColor != hit && hit != 'white') {
       switch (hit) {
         case 'red':
+          player.death = `${player.name} ran into ${redPlayer.name}'s tail`
           redPlayer.kills++
           break;
         case 'blue':
+          player.death = `${player.name} ran into ${bluePlayer.name}'s tail`
           bluePlayer.kills++
           break;
         case 'green':
+          player.death = `${player.name} ran into ${greenPlayer.name}'s tail`
           greenPlayer.kills++
           break;
         case 'orange':
+          player.death = `${player.name} ran into ${greenPlayer.name}'s tail`
           orangePlayer.kills++
           break;
         case 'purple':
           nonLethal = true;
-          player.potential += 2
+          player.potential += 1
           foodOnArea--
           console.log('food')
           return true;
@@ -641,10 +872,15 @@ const checkCollisionGrid = (player, checkDiv) => {
           console.log('error')
           break;
       }
+      logDeath(player.death)
     } else if (hit == 'white') {
       death = 'Ran into border wall'
+      player.death = `${player.name} ran into a border`
+      logDeath(player.death)
     } else {
       death = 'Ran into own tail'
+      player.death = `${player.name} ran into their own tail`
+      logDeath(player.death)
     }
 
     if (numberOfPlayers > 1 && !nonLethal) {
@@ -678,39 +914,51 @@ const removeFood = () => {
   }
 }
 
+let inMenus = false;
 let exitAnotherPause = false;
 let gameStarted = false;
 let chanceOfFood = 0;
 let foodOnArea = 0;
 let foodArr = []
 
-// Handles game speed, food distribution, and triggers a win function
+// Handles game speed and triggers a win function
 const anotherPause = (style) => {
   if (!exitAnotherPause) {
     chanceOfFood++
     chanceOfFood > 150 ? chanceOfFood = 0 : undefined
     let oneInThree = Math.floor(Math.random() * 10)
-    if (gameType == 'finite' && chanceOfFood > 100 && oneInThree < 3 && foodOnArea < 5) {
+    if (gameType == 'finite' && chanceOfFood > 100 && oneInThree < 3 && foodOnArea < 20) {
       console.log('this far')
-      let random = Math.floor(Math.random() * numberOfDivs)
-      let randomDiv = document.getElementById(`box-${random}`)
-      if (randomDiv.style.background != 'white' &&
-            randomDiv.style.background != 'red' &&
-            randomDiv.style.background != 'blue' &&
-            randomDiv.style.background != 'green' &&
-            randomDiv.style.background != 'orange') {
-        chanceOfFood = 0;
-        foodOnArea++
-        console.log('hey a random div!')
-        randomDiv.style.background = 'purple'
-        foodArr.push(randomDiv)
-      }
+      createFood();
     }
     setTimeout(()=> movePlayers(style), gameSpeed);
   } else {
     console.log('okay...')
     exitAnotherPause = false;
+    inMenus = true;
     checkWinner();
+  }
+}
+
+// Handles food distribution and creates a 4x4 food pellet
+const createFood = () => {
+  let random = Math.floor(Math.random() * numberOfDivs)
+  let randomDiv = document.getElementById(`box-${random}`)
+  for (let i = 0; i < 4; i++) {
+    if (i == 1) { randomDiv = document.getElementById(`box-${random - 1}`) }
+    if (i == 2) { randomDiv = document.getElementById(`box-${random - gridDown}`) }
+    if (i == 3) { randomDiv = document.getElementById(`box-${random - 1 - gridDown}`) }
+    if (randomDiv.style.background != 'white' &&
+          randomDiv.style.background != 'red' &&
+          randomDiv.style.background != 'blue' &&
+          randomDiv.style.background != 'green' &&
+          randomDiv.style.background != 'orange') {
+      chanceOfFood = 0;
+      foodOnArea++
+      console.log('hey a random div!')
+      randomDiv.style.background = 'purple'
+      foodArr.push(randomDiv)
+    }
   }
 }
 
@@ -789,6 +1037,7 @@ const nextRound = () => {
   let displayRound = document.getElementById('winner-anim')
   activePlayers == 1 ? removeFood() : undefined
   removePlayer(lastRoundWinner)
+  if (enableSpecials) { showInventory() }
   displayRound.innerHTML = ''
   rounds++
   fadeThis(displayRound, `Round ${rounds}`, [0,0,0], [255,255,255], getReadyToMovePlayers, 5000)
@@ -802,6 +1051,7 @@ const getReadyToMovePlayers = () => {
   movePlayers('grid')
 }
 
+// Show end of game stats
 const endGame = () => {
   let displayRound = document.getElementById('winner-anim')
   document.getElementById('stats').style.visibility = 'visible'
@@ -856,6 +1106,11 @@ const buildStats = (playerDiv, player) => {
                          </p>`
 }
 
+// Logs currently saved death message to the DOM
+const logDeath = (msg) => {
+  let doc = document.getElementById('death-history')
+  doc.innerHTML += `${msg}.&nbsp;`
+}
 
 ////
 //// BELOW ITEMS ARE EXPERIMENTAL OR DISCONTINUED

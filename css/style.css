@@ -1,25 +1,27 @@
 body {
   background: black;
-  color: blue;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  margin-top: 20px;
+  color: white;
 }
 #area {
   position: relative;
-  border: 1px solid white;
+  border: 2px solid lime;
   display: grid;
   grid-template-rows: repeat(110, 6px);
   grid-template-columns: repeat(180, 6px);
   /* width: 1080px; */
 }
 #container {
+  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 80px;
   /* width: 500px;
   height: 500px; */
 }
 .grid-piece {
-  border: 1px solid blue;
+  /* border: 1px solid blue; */
 }
 #area div {
   /* border: 1px solid blue; */
@@ -43,7 +45,13 @@ body {
   border: 1px solid blue;
 }
 #menu {
+  display: grid;
+
+  border: 1px dotted green;
   position: absolute;
+  width: 100%;
+  height: 100%;
+  /* position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,7 +61,41 @@ body {
   left: 100px;
   height: 500px;
   width: 500px;
-  border: 1px solid yellow;
+  border: 1px solid yellow; */
+}
+.category {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  border: 1px dotted grey;
+}
+.options {
+  display: grid;
+  border: 1px dotted burlywood;
+  text-align: center;
+  line-height: 100px;
+}
+.options-four {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.options-three {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.options-two {
+  grid-template-columns: 1fr 1fr;
+}
+.options div {
+  border: 1px dotted red;
+}
+.options div:hover {
+  background-color: red;
+  cursor: pointer;
+}
+.options div:active {
+  background-color: purple;
+}
+.what-it-is {
+  text-align: center;
+  line-height: 100px;
 }
 #controls {
   position: absolute;
@@ -62,8 +104,6 @@ body {
   align-items: center;
   text-align: center;
   justify-content: space-between;
-  top: 15px;
-  left: 300px;
   width: 300px;
   border: 1px solid grey;
   color: white;
@@ -153,4 +193,7 @@ button {
 }
 .red-slot {
   color: red;
+}
+#death-history {
+  border: 1px dotted grey;
 }
