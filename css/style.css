@@ -1,17 +1,17 @@
 body {
   background: black;
   color: white;
+  /* font-family: 'Lemonada', cursive; */
 }
 #area {
+  /* font-family: 'Lemonada', cursive; */
   position: relative;
-  border: 2px solid lime;
   display: grid;
   grid-template-rows: repeat(110, 6px);
   grid-template-columns: repeat(180, 6px);
   /* width: 1080px; */
 }
 #container {
-  border: 1px solid red;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,8 +46,6 @@ body {
 }
 #menu {
   display: grid;
-
-  border: 1px dotted green;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -99,12 +97,11 @@ body {
 }
 #controls {
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-content: space-between;
-  width: 300px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 12fr 1fr;
+  width: 100%;
+  height: 100%;
   border: 1px solid grey;
   color: white;
   visibility: hidden;
@@ -114,23 +111,30 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-around;
   text-align: center;
-  top: 250px;
-  left: 200px;
   color: white;
-  visibility: hidden;
+  width: 100%;
+  height: 100%;
+  z-index: -5;
 }
 #stats-here {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  width: 700px;
-  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr
+}
+#stats-here p {
+  cursor: pointer;
+}
+#stats-here p:hover {
+  color: grey;
+}
+#stats-here p:active {
+  color: lime;
 }
 .player-stat {
   visibility: hidden;
   border: 1px solid white;
-  padding: 50px;
+  padding: 40px;
 }
 .menu-stuff {
   align-self: center;
@@ -144,14 +148,17 @@ button {
   text-align: center;
   margin: 20px;
 }
-#winner-anim {
+#winner-con {
   position: absolute;
+  display: flex;
+  justify-content: center;
   background-color: transparent;
   text-align: center;
   /* display: none; */
   font-size: 50pt;
-  top: 200px;
-  left: 400px;
+  width: 100%;
+  height: 100%;
+  z-index: -4;
 }
 .player-para {
   visibility: hidden;
@@ -161,11 +168,12 @@ button {
 }
 .inv {
   display: flex;
-  border: 1px solid aqua;
+  margin: 3px;
 }
 .slot {
   width: 10px;
-  border: 1px solid aquamarine;
+  border: 1px dotted grey;
+  margin: 2px;
 }
 .wins span {
   color: grey;
@@ -194,6 +202,50 @@ button {
 .red-slot {
   color: red;
 }
-#death-history {
+#ready {
+  grid-column: 1 / span 4;
+  text-align: center;
   border: 1px dotted grey;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+#ready:hover {
+  background-color: white;
+  color: black;
+}
+#ready:active {
+  background-color: lime;
+  color: white;
+}
+.player-para {
+  border: 1px dotted burlywood;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-around;
+  text-align: center;
+}
+#red-para:hover {
+  background-color: red;
+}
+#blue-para:hover {
+  background-color: blue;
+}
+#green-para:hover {
+  background-color: green;
+}
+#orange-para:hover {
+  background-color: orange;
+}
+#snakes-in-space {
+  /* font-family: 'Lemonada', cursive; */
+  display: flex;
+  justify-content: center;
+  top: 0;
+  width: 100%;
+  position: absolute;
+  letter-spacing: 10pt;
+  word-spacing: 5pt;
+  font-style: oblique;
 }

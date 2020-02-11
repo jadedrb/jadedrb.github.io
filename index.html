@@ -3,10 +3,12 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Lemonada&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   </head>
   <body>
+    <div id="snakes-in-space"><h1>SNAKES IN SPACE</h1></div>
     <div id="container">
       <div id="area">
         <div class="red-pixel"></div>
@@ -62,70 +64,55 @@
               <div id="ab-on" onclick="setThis(18)">On</div>
             </div>
           </div>
-          <!-- <label for="player-count" class="menu-stuff">Number of Players</label>
-          <select class="menu-stuff" id="player-count">
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-            <option value="4">Four</option>
-          </select>
-          <label for="first-to" class="menu-stuff">Game Length</label>
-          <select class="menu-stuff" id="best-of">
-            <option value="1">Best of 1</option>
-            <option value="2">Best of 3</option>
-            <option value="3">Best of 5</option>
-            <option value="4">Best of 7</option>
-          </select>
-          <label for="arena-size" class="menu-stuff">Arena Size: </label>
-          <select class="menu-stuff" id="arena-size">
-            <option value="large">Large</option>
-            <option value="medium">Medium</option>
-            <option value="small">Small</option>
-          </select>
-          <label for="game-speed" class="menu-stuff">Game Speed: </label>
-          <select class="menu-stuff" id="game-speed">
-            <option value="40">Normal</option>
-            <option value="100">Slow</option>
-            <option value="10">Fast</option>
-          </select>
-          <label for="tail-length" class="menu-stuff">Tail: </label>
-          <select class="menu-stuff" id="tail-length">
-            <option value="finite">Finite</option>
-            <option value="infinite">Infinite</option>
-          </select>
-          <label for="specials" class="menu-stuff">Special Abilities: </label>
-          <select class="menu-stuff" id="specials">
-            <option value="false">Off</option>
-            <option value="true">On</option>
-          </select>
-          <button id='settings' class="menu-stuff" onclick="setAndStart(0)">NEXT</button> -->
+
         </div>
 
         <div id="controls">
           <div class="player-para" id="red-para">
             <h3>Player 1: Red</h3>
             <input class="menu-stuff" id="red-name" type="text" value="Red" placeholder="Red">
-            <p>Controls: W, A, S, D</p> (Up, Left, Down, Right)
+            <p>Controls: W, A, S, D</p>
+            <p>(Up, Left, Down, Right)</p>
+            <p>[ Q and E for inventory ]</p>
           </div>
           <div class="player-para" id="blue-para">
             <h3>Player 2: Blue</h3>
             <input class="menu-stuff" id="blue-name" type="text" value="Blue" placeholder="Blue">
             <p>Controls: Arrow keys</p>
+            <p>[ alt and shift for inventory ]</p>
           </div>
           <div class="player-para" id="green-para">
             <h3>Player 3: Green</h3>
             <input class="menu-stuff" id="green-name" type="text" value="Green" placeholder="Green">
-            <p>Controls: Y, G, H, J</p> (Up, Left, Down, Right)
+            <p>Controls: Y, G, H, J</p>
+            <p>(Up, Left, Down, Right)</p>
+            <p>[ T and U for inventory ]</p>
           </div>
           <div class="player-para" id="orange-para">
             <h3>Player 4: Orange</h3>
             <input class="menu-stuff" id="orange-name" type="text" value="Orange" placeholder="Orange">
-            <p>Controls: P, L, :, "</p> (Up, Left, Down, Right)
+            <p>Controls: P, L, :, "</p>
+            <p>(Up, Left, Down, Right)</p>
+            <p>[ O and { for inventory ]</p>
           </div>
-          <button onclick="setAndStart(1)">READY?</button>
+          <div id="ready" onclick="setAndStart(1)"><p>READY?</p></div>
         </div>
 
-        <div id="winner-anim"></div>
+        <div id="stats">
+          <div id="stats-here">
+            <div class="player-stat" id="red-stats">
+            </div>
+            <div class="player-stat" id="blue-stats">
+            </div>
+            <div class="player-stat" id="green-stats">
+            </div>
+            <div class="player-stat" id="orange-stats">
+            </div>
+            <p id="p-in-stats" onclick="setAndStart(3)"></p>
+          </div>
+        </div>
+
+        <div id="winner-con"><p id="winner-anim"></p></div>
       </div>
 
       <div id='inventory'>
@@ -181,19 +168,6 @@
       <div id="death-history"></div>
     </div>
 
-    <div id="stats">
-      <div id="stats-here">
-        <div class="player-stat" id="red-stats">
-        </div>
-        <div class="player-stat" id="blue-stats">
-        </div>
-        <div class="player-stat" id="green-stats">
-        </div>
-        <div class="player-stat" id="orange-stats">
-        </div>
-      </div>
-      <button onclick="setAndStart(3)">NEXT</button>
-    </div>
     <!-- <button onclick="movePlayers('grid')">Grid</button>
     <button onclick="movePlayers('pixel')">Pixel</button> -->
 

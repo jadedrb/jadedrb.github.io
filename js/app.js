@@ -741,6 +741,13 @@ document.onkeydown = function(key) {
   };
 }
 
+// Prevents arrow key scrolling for player 2
+window.addEventListener("keydown", function(event) {
+    if ([37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+        event.preventDefault();
+    }
+});
+
 // Runs the ability in a slot then clears that slot
 const useAbility = (player, ability, clear) => {
   document.getElementsByClassName(`${player.boxColor}-slot`)[clear].innerText = ''
@@ -760,11 +767,13 @@ const populateInv = (players) => {
     for (let j = 0; j < slotsArr[i].length; j++) {
       let random = Math.floor(Math.random() * 10)
       if (random < 8) {
-        slotsArr[i][j].innerText = 'B'
+        // slotsArr[i][j].innerHTML = '<img></img>'.innerText = 'B'
+        slotsArr[i][j].innerHTML = '<img src="images/bomb.jpg" alt="B" width="10px" height="15px">'
         playerArr[i].inventory[j] = bomb
         console.log('got there')
       } else if (random >= 8) {
-        slotsArr[i][j].innerText = 'S'
+        // slotsArr[i][j].innerText = 'S'
+        slotsArr[i][j].innerHTML = '<img src="images/switch.jpg" alt="S" width="10px" height="15px">'
         playerArr[i].inventory[j] = switcheroo
         console.log('got there')
       }
@@ -776,8 +785,8 @@ const populateInv = (players) => {
 const navigate = (player) => {
   let inv = document.getElementsByClassName(`${player.boxColor}-slot`)
   player.invNum > 6 ? player.invNum = 0 : player.invNum++
-  inv[player.invNum].style.border = '3px solid brown';
-  player.invNum == 0 ? inv[7].style.border = '1px solid aquamarine' : inv[player.invNum - 1].style.border = '1px solid aquamarine'
+  inv[player.invNum].style.border = '1px solid lime';
+  player.invNum == 0 ? inv[7].style.border = '1px dotted grey' : inv[player.invNum - 1].style.border = '1px dotted grey'
 }
 
 // This starts and continues player movement throughout game
@@ -1084,6 +1093,9 @@ const endGame = () => {
 const buildStats = (playerDiv, player) => {
 
   let record;
+
+  document.getElementById('stats').style.zIndex = '3';
+  document.getElementById('p-in-stats').innerText = 'NEXT';
 
   if (gameType != 'finite' && activePlayers == 1) {
     record = player.growth > highScore ? 'NEW High Score: ' + player.growth : 'High Score: ' + highScore
