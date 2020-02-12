@@ -1,5 +1,6 @@
 // Creates arena for grid method
 function addDivs(number) {
+  console.log('addDivs')
   let area = document.getElementById('area')
   for(let i = 1; i <= number; i++) {
     let newDiv = document.createElement('div')
@@ -31,6 +32,7 @@ let gridRight;
 
 // Sets initial movement direction and gridDirection values
 const setDirection = (method) => {
+  console.log('setDirection')
   let random = Math.floor(Math.random() * 4)
   let result;
   if (method == 'grid') {
@@ -122,7 +124,7 @@ let enableSpecials = false;
 
 // jQuery to change the CSS grid template of area div
 function changeMapSize() {
-  console.log('jquery!')
+  console.log('changeMapSize')
   // let mapSetting = document.getElementById('arena-size').value
 
   if (mapSetting != mapSize) {
@@ -130,7 +132,6 @@ function changeMapSize() {
     let areaDiv = document.getElementById('area')
     $('.grid-piece').remove();
     if (mapSize == 'large') {
-      console.log('this is large')
       gridDown = 180
       gridUp = -180
       numberOfDivs = 180 * 110
@@ -138,7 +139,6 @@ function changeMapSize() {
       $('#area').css( "grid-template-rows", "repeat(110, 6px)" );
       addDivs(110 * 180);
     } else if (mapSize == 'medium') {
-      console.log('this is medium')
       gridDown = 130
       gridUp = -130
       numberOfDivs = 105 * 130
@@ -146,7 +146,6 @@ function changeMapSize() {
       $('#area').css( "grid-template-rows", "repeat(105, 6px)" );
       addDivs(105 * 130);
     } else {
-      console.log('this is small')
       gridDown = 100
       gridUp = -100
       numberOfDivs = 100 * 100
@@ -155,13 +154,13 @@ function changeMapSize() {
       addDivs(100 * 100);
     }
     mapSize = mapSetting
-    console.log(areaDiv)
   }
 }
 
 let categories = []
 
 const clearBackgroundColor = (idArr, category = undefined) => {
+  console.log('clearBackgroundColor')
   for (let div of idArr) {
     document.getElementById(div).style.background = 'black'
   }
@@ -172,6 +171,7 @@ const clearBackgroundColor = (idArr, category = undefined) => {
 }
 
 const haveTheyClickedAllButtons = () => {
+  console.log('haveTheyClickedAllButtons')
   if (categories.length == 6) {
     changeMapSize();
     setAndStart(0);
@@ -187,6 +187,7 @@ let specAb = ['ab-off', 'ab-on']
 
 // This is for the settings window at start of game
 const setThis = (button) => {
+  console.log('setThis')
   switch (button) {
     case 1:
       clearBackgroundColor(numPlay, 1)
@@ -285,14 +286,12 @@ const setThis = (button) => {
       haveTheyClickedAllButtons()
       break;
     case 17:
-      console.log('??')
       clearBackgroundColor(specAb, 6)
       document.getElementById('ab-off').style.background = 'purple'
       enableSpecials = false
       haveTheyClickedAllButtons()
       break;
     case 18:
-      console.log('???')
       clearBackgroundColor(specAb, 6)
       document.getElementById('ab-on').style.background = 'purple'
       enableSpecials = true
@@ -310,7 +309,7 @@ const setThis = (button) => {
 //     let borough = this.event.target.id
 
 const setAndStart = (menu) => {
-
+  console.log('setAndStart')
   if (menu == 0) {
     rounds = 1;
     // Reset each players stats
@@ -322,6 +321,7 @@ const setAndStart = (menu) => {
       player.points = 0
       player.element.innerText = '0'
       player.potential = 10
+      player.status = undefined;
     })
     // This changes the menu from settings to controls (and saves your setting values)
     // gameSpeed = Number(document.getElementById('game-speed').value)
@@ -375,6 +375,7 @@ const setAndStart = (menu) => {
 }
 // This determines which players are participating
 const howManyPlayers = (num) => {
+  console.log('howManyPlayers')
   numberOfPlayers = num;
   if (num >= 1) {
     redPlayer.status = true;
@@ -391,6 +392,7 @@ const howManyPlayers = (num) => {
 }
 // This shows the appropriate players wins counter and/or inventory
 const showInventory = () => {
+  console.log('showInventory')
   let inv = document.getElementsByClassName('inv')
   let slot = document.getElementsByClassName('slot')
   if (activePlayers == 1) {
@@ -416,7 +418,6 @@ const showInventory = () => {
   }
   if (enableSpecials) { populateInv(activePlayers) }
   // This loop shows inventory slots if applicable
-  console.log(enableSpecials)
   for (let i = 0; i < slot.length; i++) {
     enableSpecials ? slot[i].style.display = 'flex' : slot[i].style.display = 'none'
   }
@@ -426,6 +427,7 @@ let bombArr = []
 
 // This is the bomb ability. It uses the players current box to calculate the blast radius
 const bomb = (el, bomber) => {
+  console.log('bomb')
   let wallAhead = false; // As soon as a wall is detected, the explosion stops
   let wallBehind = false; // rendering in that direction
   let wallAbove = false;
@@ -444,7 +446,6 @@ const bomb = (el, bomber) => {
       fireyDeath(bomber, Number(gridPiece.id.split('-')[1])); // Gives the box number of recently effected div
     } else {
       wallAhead = true;
-      console.log('wall ahead')
     }
 
     testForWalls = document.getElementById(`box-${el-i}`).style.background
@@ -455,7 +456,6 @@ const bomb = (el, bomber) => {
       fireyDeath(bomber, Number(gridPiece.id.split('-')[1]));
     } else {
       wallBehind = true;
-      console.log('wall behind')
     }
 
 // This nested for loop handles y axis (everything above and below the current x axis value)
@@ -465,14 +465,12 @@ const bomb = (el, bomber) => {
         testForWalls = document.getElementById(`box-${el+(gridUp*j)}`).style.background
         if (testForWalls == 'white') {
           wallAbove = true;
-          console.log('wall above')
         }
       }
       if (!wallBelow) {
         testForWalls = document.getElementById(`box-${el+(gridDown*j)}`).style.background
         if (testForWalls == 'white') {
           wallBelow = true;
-          console.log('wall below')
         }
       }
       if (!wallAhead) {
@@ -511,6 +509,7 @@ let bombLit = false;
 
 // Adds a bit of animation/color to the bomb ability
 const bombColor = () => {
+  console.log('bombColor')
   bombLit = true;
   let stage = bombArr[0].style.background
   for (let box of bombArr) {
@@ -520,36 +519,32 @@ const bombColor = () => {
       box.style.background = 'grey';
     }
   }
-  console.log('loop ended ' + stage)
   if (stage == 'yellow' || stage == 'burlywood') {
-    console.log('um')
     longerPause(bombColor, 100)
   } else {
-    console.log('ok')
     longerPause(bombWipe, 100)
   }
 }
 
 // Turns all bomb effected divs back to their original color
 const bombWipe = () => {
+  console.log('bombWipe')
   while (bombArr.length > 0) {
     bombArr[0].style.background = 'black';
     bombArr.shift()
   }
   bombLit = false;
-  console.log('wipe')
 }
 
 // Kills all players in bomb effected area divs
 const fireyDeath = (bomber, div) => {
+  console.log('fireyDeath')
   let grantKill = 0
   let grantPlayer;
-  console.log(bomber)
   for (let player of playerArr) {
     if (player.boxColor == bomber) { grantPlayer = player }
     if (player.boxColor != bomber && player.boxNum == div && player.status == true) {
       player.boxNum = 0
-      console.log('You killed ' + player.boxColor)
       grantKill = 1
       numberOfPlayers--
       player.status = false;
@@ -564,6 +559,7 @@ const fireyDeath = (bomber, div) => {
 
 // This is the switcheroo ability. It swaps the player's current box and direction values for an opponents values
 const switcheroo = (player, color) => {
+  console.log('switcheroo')
   let random;
   let targets = []
   for (let i = 0; i < playerArr.length; i++) {
@@ -584,7 +580,7 @@ const switcheroo = (player, color) => {
 
 // Key presses to change direction, use abilities, and navigate inventory
 document.onkeydown = function(key) {
-  console.log(key.keyCode)
+  // console.log(key.keyCode)
   switch (key.keyCode) {
     case 87: // Key: W, -100 represents up
       if (redPlayer.boxDirec != gridDown) {
@@ -736,13 +732,13 @@ document.onkeydown = function(key) {
         }
       break;
     default:
-      console.log('error')
       break;
   };
 }
 
 // Prevents arrow key scrolling for player 2
 window.addEventListener("keydown", function(event) {
+  console.log('preventDefault')
     if ([37, 38, 39, 40].indexOf(event.keyCode) > -1) {
         event.preventDefault();
     }
@@ -750,6 +746,7 @@ window.addEventListener("keydown", function(event) {
 
 // Runs the ability in a slot then clears that slot
 const useAbility = (player, ability, clear) => {
+  console.log('useAbility')
   document.getElementsByClassName(`${player.boxColor}-slot`)[clear].innerText = ''
   player.inventory[clear] = null
   ability(player.boxNum, player.boxColor)
@@ -757,25 +754,22 @@ const useAbility = (player, ability, clear) => {
 
 // Fills DOM inventory and player inventory array
 const populateInv = (players) => {
-  console.log('..')
+  console.log('populateInv')
   let slotsArr = [document.getElementsByClassName('red-slot'),
                   document.getElementsByClassName('blue-slot'),
                   document.getElementsByClassName('green-slot'),
                   document.getElementsByClassName('orange-slot')]
   for (let i = players - 1; i >= 0; i--) {
-    console.log('.l.')
     for (let j = 0; j < slotsArr[i].length; j++) {
       let random = Math.floor(Math.random() * 10)
       if (random < 8) {
         // slotsArr[i][j].innerHTML = '<img></img>'.innerText = 'B'
         slotsArr[i][j].innerHTML = '<img src="images/bomb.jpg" alt="B" width="10px" height="15px">'
         playerArr[i].inventory[j] = bomb
-        console.log('got there')
       } else if (random >= 8) {
         // slotsArr[i][j].innerText = 'S'
         slotsArr[i][j].innerHTML = '<img src="images/switch.jpg" alt="S" width="10px" height="15px">'
         playerArr[i].inventory[j] = switcheroo
-        console.log('got there')
       }
     }
   }
@@ -783,6 +777,7 @@ const populateInv = (players) => {
 
 // Highlights the next inventory item to the right
 const navigate = (player) => {
+  console.log('navigate')
   let inv = document.getElementsByClassName(`${player.boxColor}-slot`)
   player.invNum > 6 ? player.invNum = 0 : player.invNum++
   inv[player.invNum].style.border = '1px solid lime';
@@ -791,6 +786,7 @@ const navigate = (player) => {
 
 // This starts and continues player movement throughout game
 const movePlayers = (style = 'grid') => {
+  // console.log('movePlayers')
   if (style == 'grid') {
     if (!gameStarted) {
       gameStarted = true; // Do this one time at start of game
@@ -806,10 +802,8 @@ const movePlayers = (style = 'grid') => {
     greenPlayer.status ? moveOne(greenPlayer) : undefined
     orangePlayer.status ? moveOne(orangePlayer) : undefined
     if (bombArr.length > 0 && !bombLit) {
-      console.log('run')
       bombLit = true;
       longerPause(bombColor, 200)
-      console.log('ning')
     }
     anotherPause('grid')
     // The else is all pixel method related
@@ -820,7 +814,6 @@ const movePlayers = (style = 'grid') => {
       // document.getElementsByClassName("blue-pixel")[0].style.display = 'block';
       bluePlayer.boxDirec = setRandomDirection(bluePlayer, 'pixel')
       redPlayer.boxDirec = setRandomDirection(redPlayer, 'pixel')
-      console.log('testpixel')
     }
     redPlayer.status ? movePixel(redPlayer) : undefined
     bluePlayer.status ? movePixel(bluePlayer) : undefined
@@ -830,6 +823,7 @@ const movePlayers = (style = 'grid') => {
 
 // Grid movement method
 const moveOne = (player) => {
+  // console.log('moveOne')
   let currentBox = document.getElementById(`box-${player.boxNum}`)
   let moveTo = document.getElementById(`box-${player.boxNum + player.boxDirec}`)
   player.boxArr.push(moveTo)
@@ -849,6 +843,7 @@ const moveOne = (player) => {
 
 // Checks if a moving player has just touched an enemy trail
 const checkCollisionGrid = (player, checkDiv) => {
+  // console.log('checkCollisionGrid')
   let nonLethal = false;
   let hit = checkDiv.style.background
   if (hit == 'red' || hit == 'blue' || hit == 'green' || hit == 'orange' || hit == 'white' || hit == 'purple') {
@@ -874,11 +869,9 @@ const checkCollisionGrid = (player, checkDiv) => {
           nonLethal = true;
           player.potential += 1
           foodOnArea--
-          console.log('food')
           return true;
           break;
         default:
-          console.log('error')
           break;
       }
       logDeath(player.death)
@@ -904,6 +897,7 @@ const checkCollisionGrid = (player, checkDiv) => {
 
 // Removes a player trail after death
 const removePlayer = (player) => {
+  console.log('removePlayer')
   for (let i = 0; player.boxArr.length > 0; ) {
     if (player.boxArr[0].style.background == player.boxColor) {
       player.boxArr[0].style.background = 'black';
@@ -914,6 +908,7 @@ const removePlayer = (player) => {
 
 // Removes uneaten food from area after game round
 const removeFood = () => {
+  console.log('removeFood')
   foodOnArea = 0;
   for (let i = 0; foodArr.length > 0; ) {
     if (foodArr[0].style.background == 'purple') {
@@ -932,17 +927,16 @@ let foodArr = []
 
 // Handles game speed and triggers a win function
 const anotherPause = (style) => {
+  // console.log('anotherPause')
   if (!exitAnotherPause) {
     chanceOfFood++
     chanceOfFood > 150 ? chanceOfFood = 0 : undefined
     let oneInThree = Math.floor(Math.random() * 10)
     if (gameType == 'finite' && chanceOfFood > 100 && oneInThree < 3 && foodOnArea < 20) {
-      console.log('this far')
       createFood();
     }
     setTimeout(()=> movePlayers(style), gameSpeed);
   } else {
-    console.log('okay...')
     exitAnotherPause = false;
     inMenus = true;
     checkWinner();
@@ -951,12 +945,15 @@ const anotherPause = (style) => {
 
 // Handles food distribution and creates a 4x4 food pellet
 const createFood = () => {
+  console.log('createFood')
   let random = Math.floor(Math.random() * numberOfDivs)
   let randomDiv = document.getElementById(`box-${random}`)
   for (let i = 0; i < 4; i++) {
-    if (i == 1) { randomDiv = document.getElementById(`box-${random - 1}`) }
-    if (i == 2) { randomDiv = document.getElementById(`box-${random - gridDown}`) }
-    if (i == 3) { randomDiv = document.getElementById(`box-${random - 1 - gridDown}`) }
+    if (i == 1 && random - 1 > 0) { randomDiv = document.getElementById(`box-${random - 1}`) }
+    if (i == 2 && random - gridDown > 0) { randomDiv = document.getElementById(`box-${random - gridDown}`) }
+    if (i == 3 && random - 1 - gridDown > 0) { randomDiv = document.getElementById(`box-${random - 1 - gridDown}`) }
+    console.log([random-1,random-gridDown,random-1-gridDown])
+    console.log(randomDiv)
     if (randomDiv.style.background != 'white' &&
           randomDiv.style.background != 'red' &&
           randomDiv.style.background != 'blue' &&
@@ -964,7 +961,6 @@ const createFood = () => {
           randomDiv.style.background != 'orange') {
       chanceOfFood = 0;
       foodOnArea++
-      console.log('hey a random div!')
       randomDiv.style.background = 'purple'
       foodArr.push(randomDiv)
     }
@@ -973,14 +969,15 @@ const createFood = () => {
 
 // Runs a function after a specified time
 const longerPause = (func, time) => {
+  console.log('longerPause')
   setTimeout(()=> func(), time);
 }
 
 // Determines winner and displays winning animations
 const checkWinner = () => {
+  console.log('checkWinner')
   for (let player of playerArr) {
     if (player.status == true) {
-      console.log('are we...')
       player.wins++
       player.element.innerText = player.wins
 
@@ -989,6 +986,7 @@ const checkWinner = () => {
       let winnerAnim = document.getElementById('winner-anim')
       lastRoundWinner = player;
       winnerAnim.style.display = 'block'
+      document.getElementById('winner-con').style.zIndex = '5';
 
       if (player.boxColor == 'red') {
         rgbColor = [255,0,0]
@@ -1011,7 +1009,6 @@ const checkWinner = () => {
           words = 'Game over.<br>' + words + ' VICTORY!'
         }
         setTimeout(()=> fadeThis(winnerAnim, words, [255,255,255], rgbColor, endGame), 2000);
-        console.log('end?')
       } else {
         if (activePlayers == 1) {
           words = 'Game over.'
@@ -1026,6 +1023,7 @@ const checkWinner = () => {
 
 // Takes an element, a starting rgb color, and a target rgb color for animation
 function fadeThis(element, words, startColor, finishColor, nextFunc, time = 1000) {
+  console.log('fadeThis')
     element.innerHTML = words;
     let timer = setInterval(() => {
         if (startColor[0] == finishColor[0] && startColor[1] == finishColor[1] && startColor[2] == finishColor[2]) {
@@ -1042,6 +1040,8 @@ function fadeThis(element, words, startColor, finishColor, nextFunc, time = 1000
 
 // Triggers a next round animation
 const nextRound = () => {
+  console.log('nextRound')
+  document.getElementById('winner-con').style.zIndex = '-4';
   gameType == 'finite' ? playerArr.forEach(player => player.points += player.potential) : undefined
   let displayRound = document.getElementById('winner-anim')
   activePlayers == 1 ? removeFood() : undefined
@@ -1053,6 +1053,7 @@ const nextRound = () => {
 }
 
 const getReadyToMovePlayers = () => {
+  console.log('getReadyToMovePlayers')
   let displayRound = document.getElementById('winner-anim')
   displayRound.innerHTML = ''
   gameStarted = false;
@@ -1062,6 +1063,8 @@ const getReadyToMovePlayers = () => {
 
 // Show end of game stats
 const endGame = () => {
+  console.log('endGame')
+  document.getElementById('winner-con').style.zIndex = '-4';
   let displayRound = document.getElementById('winner-anim')
   document.getElementById('stats').style.visibility = 'visible'
   displayRound.innerHTML = ''
@@ -1091,7 +1094,7 @@ const endGame = () => {
 
 // Shows end of game stats based off game mode and number of players
 const buildStats = (playerDiv, player) => {
-
+console.log('buildStats')
   let record;
 
   document.getElementById('stats').style.zIndex = '3';
@@ -1120,6 +1123,7 @@ const buildStats = (playerDiv, player) => {
 
 // Logs currently saved death message to the DOM
 const logDeath = (msg) => {
+  console.log('logDeath')
   let doc = document.getElementById('death-history')
   doc.innerHTML += `${msg}.&nbsp;`
 }
@@ -1130,48 +1134,45 @@ const logDeath = (msg) => {
 
 
 // Pixel movement method
-const movePixel = (player) => {
-  let area = document.getElementById('area')
-  let newDiv = document.createElement('div')
-  player.boxColor == 'red' ? newDiv.className = 'red-pixel' : newDiv.className = 'blue-pixel'
-
-  switch(player.boxDirec) {
-    case 'left':
-      player.pixelCoor.x -= 3
-      break;
-    case 'right':
-      player.pixelCoor.x += 3
-      break;
-    case 'up':
-      player.pixelCoor.y -= 3
-      break;
-    case 'down':
-      player.pixelCoor.y += 3
-      break;
-  }
-
-  newDiv.style.display = 'block'
-  newDiv.style.left = player.pixelCoor.x + 'px'
-  newDiv.style.top = player.pixelCoor.y + 'px'
-  // console.log(newDiv)
-
-  // document.getElementById('carRight').style.left="600px";
-  area.append(newDiv)
-  checkCollisionPixel(player);
-}
-
-const checkCollisionPixel = (player) => {
-  let x = player.pixelCoor.x
-  let y = player.pixelCoor.y
-  // console.log(x + ' ' + y)
-
-  if (x < 0) {
-    alert('left border')
-  } else if (x > 1070) {
-    alert('right border')
-  } else if (y < 0) {
-    alert('top border')
-  } else if (y > 650) {
-    alert('bottom border')
-  }
-}
+// const movePixel = (player) => {
+//   let area = document.getElementById('area')
+//   let newDiv = document.createElement('div')
+//   player.boxColor == 'red' ? newDiv.className = 'red-pixel' : newDiv.className = 'blue-pixel'
+//
+//   switch(player.boxDirec) {
+//     case 'left':
+//       player.pixelCoor.x -= 3
+//       break;
+//     case 'right':
+//       player.pixelCoor.x += 3
+//       break;
+//     case 'up':
+//       player.pixelCoor.y -= 3
+//       break;
+//     case 'down':
+//       player.pixelCoor.y += 3
+//       break;
+//   }
+//
+//   newDiv.style.display = 'block'
+//   newDiv.style.left = player.pixelCoor.x + 'px'
+//   newDiv.style.top = player.pixelCoor.y + 'px'
+//
+//   area.append(newDiv)
+//   checkCollisionPixel(player);
+// }
+//
+// const checkCollisionPixel = (player) => {
+//   let x = player.pixelCoor.x
+//   let y = player.pixelCoor.y
+//
+//   if (x < 0) {
+//     alert('left border')
+//   } else if (x > 1070) {
+//     alert('right border')
+//   } else if (y < 0) {
+//     alert('top border')
+//   } else if (y > 650) {
+//     alert('bottom border')
+//   }
+// }
