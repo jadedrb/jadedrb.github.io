@@ -1,8 +1,8 @@
 # snakes in space
 
 A snakes game... but in space! If you've never played snakes: you start off with a snake of a certain length
-and you move around the arena eating food (purple squares) in order to grow longer. The longer your snake gets, 
-the harder it is to survive. 
+and you move around the arena eating food (purple squares) in order to grow longer all while trying to 
+avoid running into your tail. The longer your snake gets, the harder it is to survive. 
 
 In this version there are variations of game mode. Finite mode: your tail grows after eating food.
 Infinite mode: your tail grows non-stop without the need of eating food. Special abilities mode: you
