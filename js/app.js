@@ -428,12 +428,17 @@ let bombArr = []
 // This is the bomb ability. It uses the players current box to calculate the blast radius
 const bomb = (el, bomber) => {
   console.log('bomb')
+  console.log(el)
+  console.log(bomber)
   let wallAhead = false; // As soon as a wall is detected, the explosion stops
   let wallBehind = false; // rendering in that direction
   let wallAbove = false;
   let wallBelow = false;
   let testForWalls;
   let gridPiece;
+
+  gridPiece = document.getElementById(`box-${el}`)
+  fireyDeath(bomber, Number(gridPiece.id.split('-')[1]));
 
   // This for loop handles x axis in both directions
   for (let i = 1; i < 7; i++) {
@@ -548,7 +553,7 @@ const fireyDeath = (bomber, div) => {
       grantKill = 1
       numberOfPlayers--
       player.status = false;
-      player.death = `${player.name} got blown up by a bomb`
+      player.death = `${player.name} got blown up`
       logDeath(player.death)
       removePlayer(player)
       if (numberOfPlayers == 1) { exitAnotherPause = true }
@@ -557,10 +562,113 @@ const fireyDeath = (bomber, div) => {
   grantPlayer.kills += grantKill
 }
 
-// This is the switcheroo ability. It swaps the player's current box and direction values for an opponents values
-const switcheroo = (player, color) => {
-  console.log('switcheroo')
-  let random;
+let missileArr = []
+
+// Creates a new missile object
+const missile = (player, color) => {
+  let twoPlayersInvolved = establishTarget(player, color);
+  console.log(twoPlayersInvolved + ' <-twoPlayersInvolved')
+  if (twoPlayersInvolved) {
+    let targets = twoPlayersInvolved[0]
+    let random = Math.floor(Math.random() * targets.length)
+    let missileObject = { target: targets[random], location: twoPlayersInvolved[1].boxNum, player: twoPlayersInvolved[1].boxColor }
+    missileArr.push(missileObject)
+  }
+}
+
+// Deals with missile movement on the y axis
+const missileMovement = () => {
+  for (let i = 0; i < missileArr.length; i++) {
+
+    let missile = missileArr[i]
+    let hitSomething = false
+    let countMoves = 0
+
+    let div = document.getElementById(`box-${missile.location}`)
+    let difference;
+    missile.target.boxNum - missile.location > 0 ? difference = missile.target.boxNum - missile.location : difference = missile.location - missile.target.boxNum
+
+    if (difference >= gridDown) {
+      if (missile.target.boxNum > missile.location) {
+        if (div.style.background != 'black') { div.style.background = 'black' }
+        missile.location += gridDown
+        div = document.getElementById(`box-${missile.location}`)
+        if (div.style.background != missile.player && div.style.background != 'black' && div.style.background != '') {
+          hitSomething = true
+        } else {
+          document.getElementById(`box-${missile.location}`).style.background = 'aqua'
+          countMoves++
+        }
+      } else {
+        if (div.style.background != 'black') { div.style.background = 'black' }
+        missile.location += gridUp
+        div = document.getElementById(`box-${missile.location}`)
+        if (div.style.background != missile.player && div.style.background != 'black' && div.style.background != '') {
+          hitSomething = true
+        } else {
+          document.getElementById(`box-${missile.location}`).style.background = 'aqua'
+          countMoves++
+        }
+      }
+    }
+
+    if (!hitSomething) {
+      hitSomething = missileExAxis(missile)
+      countMoves++
+    }
+    if (countMoves < 2 && !hitSomething) {
+      hitSomething = missileExAxis(missile)
+    }
+    if (hitSomething) {
+      missileArr.splice(i, 1)
+      bomb(missile.location, missile.player)
+
+    }
+    console.log(hitSomething + '<-hitSomething')
+  }
+}
+
+// Deals with missile movement on x axis
+const missileExAxis = (missile) => {
+  let targetRegion;
+  let missileRegion;
+  let div = document.getElementById(`box-${missile.location}`)
+
+  // Gives both missile and target coordinates on x axis
+  let multiplier = missile.target.boxNum / gridDown
+  let startOfRows = Math.floor(multiplier) * gridDown
+  targetRegion = missile.target.boxNum - startOfRows
+  multiplier = missile.location / gridDown
+  startOfRows = Math.floor(multiplier) * gridDown
+  missileRegion = missile.location - startOfRows
+
+  console.log(missile.player)
+
+  if (targetRegion > missileRegion) {
+    if (div.style.background != 'black') { div.style.background = 'black' }
+    missile.location += gridRight
+    console.log('right1')
+  } else {
+    if (div.style.background != 'black') { div.style.background = 'black' }
+    missile.location += gridLeft
+    console.log('left1')
+  }
+  div = document.getElementById(`box-${missile.location}`)
+  if (div.style.background != missile.player && div.style.background != 'black' && div.style.background != '') {
+    console.log('...')
+    console.log(missile.player)
+    console.log(div.style.background)
+    console.log('wowthere')
+    return true
+  } else {
+    document.getElementById(`box-${missile.location}`).style.background = 'aqua'
+    console.log('wowowothere')
+    return false
+  }
+}
+
+// Stores a target player object and the attacker for reference in a missile object
+const establishTarget = (player, color) => {
   let targets = []
   for (let i = 0; i < playerArr.length; i++) {
     if (playerArr[i].boxColor != color && playerArr[i].status == true) {
@@ -569,6 +677,22 @@ const switcheroo = (player, color) => {
       player = playerArr[i]
     }
   }
+  if (targets.length == 0) {
+    console.log('itshouldbefalse')
+    return false
+  } else {
+    return [targets, player]
+  }
+}
+
+// This is the switcheroo ability. It swaps the player's current box and direction values for an opponents values
+const switcheroo = (player, color) => {
+  console.log('switcheroo')
+  let random;
+  let twoPlayersInvolved = establishTarget(player, color);
+  let targets = twoPlayersInvolved[0]
+  player = twoPlayersInvolved[1]
+  console.log(targets)
   random = Math.floor(Math.random() * targets.length)
   let playerInstanceOne = { box: player.boxNum, direction: player.boxDirec }
   let playerInstanceTwo = { box: targets[random].boxNum, direction: targets[random].boxDirec }
@@ -761,15 +885,18 @@ const populateInv = (players) => {
                   document.getElementsByClassName('orange-slot')]
   for (let i = players - 1; i >= 0; i--) {
     for (let j = 0; j < slotsArr[i].length; j++) {
-      let random = Math.floor(Math.random() * 10)
+      let random = Math.floor(Math.random() * 11)
       if (random < 8) {
         // slotsArr[i][j].innerHTML = '<img></img>'.innerText = 'B'
         slotsArr[i][j].innerHTML = '<img src="images/bomb.jpg" alt="B" width="10px" height="15px">'
         playerArr[i].inventory[j] = bomb
-      } else if (random >= 8) {
+      } else if (random >= 8 && random <= 9) {
         // slotsArr[i][j].innerText = 'S'
         slotsArr[i][j].innerHTML = '<img src="images/switch.jpg" alt="S" width="10px" height="15px">'
         playerArr[i].inventory[j] = switcheroo
+      } else {
+        slotsArr[i][j].innerHTML = '<img src="images/missile.jpg" alt="S" width="10px" height="15px">'
+        playerArr[i].inventory[j] = missile
       }
     }
   }
@@ -801,6 +928,7 @@ const movePlayers = (style = 'grid') => {
     bluePlayer.status ? moveOne(bluePlayer) : undefined
     greenPlayer.status ? moveOne(greenPlayer) : undefined
     orangePlayer.status ? moveOne(orangePlayer) : undefined
+    if (enableSpecials && missileArr.length > 0) { missileMovement() }
     if (bombArr.length > 0 && !bombLit) {
       bombLit = true;
       longerPause(bombColor, 200)
@@ -915,6 +1043,14 @@ const removeFood = () => {
       foodArr[0].style.background = 'black';
     }
     foodArr.shift()
+  }
+}
+
+// Removes any missiles that are flying lastRoundWinner
+const removeAnyMissiles = () => {
+  for (let i = 0; missileArr.length > 0; ) {
+    document.getElementById(`box-${missileArr[0].location}`).style.background = 'black'
+    missileArr.shift()
   }
 }
 
@@ -1046,6 +1182,7 @@ const nextRound = () => {
   let displayRound = document.getElementById('winner-anim')
   activePlayers == 1 ? removeFood() : undefined
   removePlayer(lastRoundWinner)
+  removeAnyMissiles()
   if (enableSpecials) { showInventory() }
   displayRound.innerHTML = ''
   rounds++
@@ -1071,6 +1208,7 @@ const endGame = () => {
   gameType == 'finite' ? playerArr.forEach(player => player.points += player.potential) : undefined
   gameType == 'finite' ? removeFood() : undefined
   removePlayer(lastRoundWinner)
+  removeAnyMissiles()
   gameStarted = false;
 
   let redStats = document.getElementById('red-stats')
