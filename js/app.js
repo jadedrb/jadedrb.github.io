@@ -159,6 +159,7 @@ function changeMapSize() {
 
 let categories = []
 
+// Ensures only one button in a settings category is purple
 const clearBackgroundColor = (idArr, category = undefined) => {
   console.log('clearBackgroundColor')
   for (let div of idArr) {
@@ -170,6 +171,7 @@ const clearBackgroundColor = (idArr, category = undefined) => {
   }
 }
 
+// Detect when all settings have been applied
 const haveTheyClickedAllButtons = () => {
   console.log('haveTheyClickedAllButtons')
   if (categories.length == 6) {
@@ -301,13 +303,7 @@ const setThis = (button) => {
   }
 }
 
-// Could maybe accomplish the same thing with this
-// $(()=>{
-//   $('button').on('click', (event)=>{
-//
-//     event.preventDefault();
-//     let borough = this.event.target.id
-
+// Menu appearing and disappearing
 const setAndStart = (menu) => {
   console.log('setAndStart')
   if (menu == 0) {
@@ -324,15 +320,8 @@ const setAndStart = (menu) => {
       player.status = undefined;
     })
     // This changes the menu from settings to controls (and saves your setting values)
-    // gameSpeed = Number(document.getElementById('game-speed').value)
-    // let players = Number(document.getElementById('player-count').value)
-    // let arenaSize = document.getElementById('arena-size').value
     document.getElementById('menu').style.visibility = 'hidden'
     document.getElementById('controls').style.visibility = 'visible'
-    // firstTo = document.getElementById('best-of').value
-    // gameType = document.getElementById('tail-length').value
-    // enableSpecials = (document.getElementById('specials').value === 'true')
-    // activePlayers = players
     categories = []
     clearBackgroundColor(numPlay, undefined)
     clearBackgroundColor(gameL, undefined)
@@ -619,10 +608,10 @@ const missileMovement = () => {
     if (countMoves < 2 && !hitSomething) {
       hitSomething = missileExAxis(missile)
     }
-    if (hitSomething) {
+    if (hitSomething || !missile.target.status) {
+      document.getElementById(`box-${missile.location}`).style.background = 'black'
       missileArr.splice(i, 1)
       bomb(missile.location, missile.player)
-
     }
     console.log(hitSomething + '<-hitSomething')
   }
@@ -704,7 +693,7 @@ const switcheroo = (player, color) => {
 
 // Key presses to change direction, use abilities, and navigate inventory
 document.onkeydown = function(key) {
-  // console.log(key.keyCode)
+
   switch (key.keyCode) {
     case 87: // Key: W, -100 represents up
       if (redPlayer.boxDirec != gridDown) {
@@ -887,11 +876,9 @@ const populateInv = (players) => {
     for (let j = 0; j < slotsArr[i].length; j++) {
       let random = Math.floor(Math.random() * 11)
       if (random < 8) {
-        // slotsArr[i][j].innerHTML = '<img></img>'.innerText = 'B'
         slotsArr[i][j].innerHTML = '<img src="images/bomb.jpg" alt="B" width="10px" height="15px">'
         playerArr[i].inventory[j] = bomb
       } else if (random >= 8 && random <= 9) {
-        // slotsArr[i][j].innerText = 'S'
         slotsArr[i][j].innerHTML = '<img src="images/switch.jpg" alt="S" width="10px" height="15px">'
         playerArr[i].inventory[j] = switcheroo
       } else {
@@ -938,8 +925,6 @@ const movePlayers = (style = 'grid') => {
   } else {
     if (!gameStarted) {
       gameStarted = true;
-      // document.getElementsByClassName("red-pixel")[0].style.display = 'block';
-      // document.getElementsByClassName("blue-pixel")[0].style.display = 'block';
       bluePlayer.boxDirec = setRandomDirection(bluePlayer, 'pixel')
       redPlayer.boxDirec = setRandomDirection(redPlayer, 'pixel')
     }
@@ -951,12 +936,12 @@ const movePlayers = (style = 'grid') => {
 
 // Grid movement method
 const moveOne = (player) => {
-  // console.log('moveOne')
+
   let currentBox = document.getElementById(`box-${player.boxNum}`)
   let moveTo = document.getElementById(`box-${player.boxNum + player.boxDirec}`)
   player.boxArr.push(moveTo)
   player.growth++
-  // console.log(`box-${player.boxNum + player.boxDirec}`)
+
   if(checkCollisionGrid(player, moveTo)) {
     moveTo.style.background = player.boxColor;
     player.boxNum += player.boxDirec
@@ -1177,7 +1162,7 @@ function fadeThis(element, words, startColor, finishColor, nextFunc, time = 1000
 // Triggers a next round animation
 const nextRound = () => {
   console.log('nextRound')
-  document.getElementById('winner-con').style.zIndex = '-4';
+  // document.getElementById('winner-con').style.zIndex = '-4';
   gameType == 'finite' ? playerArr.forEach(player => player.points += player.potential) : undefined
   let displayRound = document.getElementById('winner-anim')
   activePlayers == 1 ? removeFood() : undefined
@@ -1265,52 +1250,3 @@ const logDeath = (msg) => {
   let doc = document.getElementById('death-history')
   doc.innerHTML += `${msg}.&nbsp;`
 }
-
-////
-//// BELOW ITEMS ARE EXPERIMENTAL OR DISCONTINUED
-////
-
-
-// Pixel movement method
-// const movePixel = (player) => {
-//   let area = document.getElementById('area')
-//   let newDiv = document.createElement('div')
-//   player.boxColor == 'red' ? newDiv.className = 'red-pixel' : newDiv.className = 'blue-pixel'
-//
-//   switch(player.boxDirec) {
-//     case 'left':
-//       player.pixelCoor.x -= 3
-//       break;
-//     case 'right':
-//       player.pixelCoor.x += 3
-//       break;
-//     case 'up':
-//       player.pixelCoor.y -= 3
-//       break;
-//     case 'down':
-//       player.pixelCoor.y += 3
-//       break;
-//   }
-//
-//   newDiv.style.display = 'block'
-//   newDiv.style.left = player.pixelCoor.x + 'px'
-//   newDiv.style.top = player.pixelCoor.y + 'px'
-//
-//   area.append(newDiv)
-//   checkCollisionPixel(player);
-// }
-//
-// const checkCollisionPixel = (player) => {
-//   let x = player.pixelCoor.x
-//   let y = player.pixelCoor.y
-//
-//   if (x < 0) {
-//     alert('left border')
-//   } else if (x > 1070) {
-//     alert('right border')
-//   } else if (y < 0) {
-//     alert('top border')
-//   } else if (y > 650) {
-//     alert('bottom border')
-//   }
-// }
