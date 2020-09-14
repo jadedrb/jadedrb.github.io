@@ -33,5 +33,6 @@ trigger a death function.
 
 That's the gist. Now get in there and slither through zero-g space!
 
-Repository link: https://github.com/jadedrb/jadedrb.github.io
-Direct to game link: jadedrb.github.io
+Repository link: https://github.com/jadedrb/snakes-in-space
+
+Direct to game link: jadedrb.github.io/snakes-in-space
