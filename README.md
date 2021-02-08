@@ -3,7 +3,7 @@ A snakes game... but in space! With multiplayer (sort of), power-ups, and differ
 
 ## 
 
-<img src="https://user-images.githubusercontent.com/60476965/107167422-d8df9e80-6986-11eb-8bed-6e47614f1608.png" width="90%"></img> 
+<img src="https://user-images.githubusercontent.com/60476965/107168665-f3674700-6989-11eb-953d-cffe55f54251.png" width="23%"></img> <img src="https://user-images.githubusercontent.com/60476965/107168671-f5c9a100-6989-11eb-94de-eb1e96fe7f13.png" width="23%"></img> <img src="https://user-images.githubusercontent.com/60476965/107168676-f6623780-6989-11eb-8937-5393d7afc4ed.png" width="23%"></img> <img src="https://user-images.githubusercontent.com/60476965/107168678-f6face00-6989-11eb-84e4-df0f24b7f3d7.png" width="23%"></img>  
 
 ## Description
 
