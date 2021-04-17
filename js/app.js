@@ -1,3 +1,5 @@
+console.log('v1.01')
+
 // Creates arena for grid method
 function addDivs(number) {
   console.log('addDivs')
