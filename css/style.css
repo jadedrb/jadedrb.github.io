@@ -2,6 +2,13 @@ body {
   background: black;
   color: white;
   /* font-family: 'Lemonada', cursive; */
+ 
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 #area {
   /* font-family: 'Lemonada', cursive; */
@@ -224,7 +231,7 @@ button {
   justify-content: center;
   top: 0;
   width: 100%;
-  position: absolute;
+
   letter-spacing: 10pt;
   word-spacing: 5pt;
   font-style: oblique;
