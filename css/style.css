@@ -9,6 +9,7 @@ body {
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
+  
 }
 #area {
   /* font-family: 'Lemonada', cursive; */
@@ -235,4 +236,8 @@ button {
   letter-spacing: 10pt;
   word-spacing: 5pt;
   font-style: oblique;
+}
+
+#zoom {
+  display: none;
 }

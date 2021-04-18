@@ -127,7 +127,10 @@ let enableSpecials = false;
 // jQuery to change the CSS grid template of area div
 function changeMapSize() {
   console.log('changeMapSize')
-  // let mapSetting = document.getElementById('arena-size').value
+
+  let zoomScrollBar = document.getElementById('zoom')
+  zoomScrollBar.style.display = 'block'
+  zoomScrollBar.value = '6'
 
   if (mapSetting != mapSize) {
     mapSize = mapSetting
@@ -158,6 +161,31 @@ function changeMapSize() {
     mapSize = mapSetting
   }
 }
+
+// Zoom in with scrol bar for screen adjustments
+const zoom = e => {
+  
+  let size = e.target.value
+  let columns, rows;
+
+  if (mapSize === 'large') {
+    columns = 180
+    rows = 110
+  }
+  else if (mapSize === 'medium') {
+    columns = 130
+    rows = 105
+  }
+  else {
+    columns = 100
+    rows = 100
+    console.log('yes')
+  }
+
+  $('#area').css("grid-template-columns", `repeat(${columns}, ${size}px)`);
+  $('#area').css("grid-template-rows", `repeat(${rows}, ${size}px)`);
+}
+
 
 let categories = []
 
@@ -339,6 +367,7 @@ const setAndStart = (menu) => {
     howManyPlayers(activePlayers)
   } else if (menu == 1){
     // This hides controls menu and starts the game
+    document.getElementById('zoom').style.display = 'none'
     document.getElementById('controls').style.visibility = 'hidden'
     document.getElementById('red-para').style.visibility = 'hidden'
     document.getElementById('blue-para').style.visibility = 'hidden'
